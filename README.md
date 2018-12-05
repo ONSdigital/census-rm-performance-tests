@@ -5,7 +5,7 @@
 ### Case Service
 To run the Locust tasks for the Case service, use:
 
-    docker run -it -p 8089:8089 -e CASE_ID=<CASE_ID> eu.gcr.io/census-rm-jt-dev/locust:latest --host=<CASE_HOST>
+    docker run -p 8089:8089 -e CASE_ID=<CASE_ID> eu.gcr.io/census-rm-jt-dev/locust:latest --host=<CASE_HOST>
 
 &mdash;Whereby `CASE_ID` is the UUID of a valid case and `CASE_HOST` is the URL of the Case service host.
 
