@@ -7,8 +7,16 @@ name = "pypi"
 locustio = "*"
 faker = "*"
 backoff = "*"
+structlog = "*"
+behave = "*"
+pika = "*"
+census-rm-sample-loader = {editable = true,git = "https://github.com/ONSdigital/census-rm-sample-loader"}
+paramiko = "*"
+pgpy = "*"
 
 [dev-packages]
+pytest = "*"
+pytest-cov = "*"
 
 [requires]
 python_version = "3.7"
