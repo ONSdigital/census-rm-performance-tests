@@ -10,7 +10,6 @@ from tests.utilties.rabbit_context import RabbitContext
 def before_scenario(context, _):
     context.test_start_local_datetime = datetime.now()
     context.action_plan_id = str(uuid.uuid4())
-    context.collection_exercise_id = str(uuid.uuid4())
     _purge_queues()
 
 

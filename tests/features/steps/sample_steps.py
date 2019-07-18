@@ -11,7 +11,7 @@ from config import Config
 def loading_sample(context):
     sample_file_name = Path('/resources/sample_files/sample_file')
 
-    load_sample_file(sample_file_name, context.collection_exercise_id,
+    load_sample_file(sample_file_name, context.action_plan_id,
                      context.action_plan_id,
                      host=Config.RABBITMQ_HOST, port=Config.RABBITMQ_PORT,
                      vhost=Config.RABBITMQ_VHOST, exchange=Config.RABBITMQ_EXCHANGE,
@@ -19,6 +19,6 @@ def loading_sample(context):
                      queue_name=Config.RABBITMQ_SAMPLE_INBOUND_QUEUE)
 
 
-@step('an time has passed to allow for full sample ingestion')
-def wait_for_sample_ingestion():
+@step("the action rules trigger")
+def wait_for_sample_ingestion(_context):
     sleep(Config.SAMPLE_SLEEP*60)

@@ -7,7 +7,7 @@ from config import Config
 from tests.controllers.action_controller import create_action_plan, create_action_rule
 
 
-@step('all initial contact action rules has been scheduled in the future')
+@step("all initial contact action rules have been scheduled in the future")
 def setup_action_plan_and_rules(context):
     action_plan_url = setup_action_plan(context.action_plan_id)
     setup_action_rules(action_plan_url, action_delay=Config.ACTION_RULE_DELAY)
