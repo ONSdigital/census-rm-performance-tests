@@ -1,10 +1,13 @@
+import logging
 import uuid
 from datetime import timedelta, datetime
 
 from behave import step
+from structlog import wrap_logger
 
 from config import Config
-from tests.controllers.action_controller import create_action_plan, create_action_rule
+from controllers.action_controller import create_action_plan, create_action_rule
+logger = wrap_logger(logging.getLogger(__name__))
 
 
 @step("all initial contact action rules have been scheduled in the future")
@@ -20,8 +23,7 @@ def setup_action_plan(action_plan_id):
 
 
 def setup_action_rules(action_plan_url, action_delay):
-    trigger_date_time = (datetime.utcnow() + timedelta(minutes=action_delay)).isoformat() + 'Z'
-
+    trigger_date_time = (datetime.utcnow() + timedelta(minutes=int(action_delay))).isoformat() + 'Z'
     classifiers_for_action_type = {
         'ICL1E': {'treatmentCode': ['HH_LFNR1E', 'HH_LFNR2E', 'HH_LFNR3AE', 'HH_LF2R1E', 'HH_LF2R2E', 'HH_LF2R3AE',
                                     'HH_LF2R3BE', 'HH_LF3R1E', 'HH_LF3R2E', 'HH_LF3R3AE', 'HH_LF3R3BE']},

@@ -34,15 +34,14 @@ class SftpUtility:
     def __exit__(self, *_):
         self.ssh_client.close()
 
-    def get_all_files_after_time(self, period_start_time, prefix, suffix=""):
-        files = self._sftp_client.listdir_attr(PACK_CODE_TO_SFTP_DIRECTORY[prefix])
+    def get_all_print_files_paths(self, sftp_directory, prefix='', suffix='', period_start_time=datetime.utcnow()):
+        files = self._sftp_client.listdir_attr(sftp_directory)
         period = period_start_time.strftime('%Y-%m-%d')
 
         return [
                 _file for _file in files
                 if f'{prefix}_{period}' in _file.filename
                 and _file.filename.endswith(suffix)
-                and period_start_time <= datetime.fromtimestamp(_file.st_mtime)
             ]
 
     def get_files_content_as_list(self, files, prefix):
@@ -69,7 +68,7 @@ class SftpUtility:
         return self._sftp_client.lstat(file_path).st_size
 
     def decrypt_message(self, message):
-        our_key, _ = pgpy.PGPKey.from_file('our_dummy_private.asc')
+        our_key, _ = pgpy.PGPKey.from_file('tests/resources/dummy_keys/our_dummy_private.asc')
         with our_key.unlock('test'):
             encrypted_text_message = pgpy.PGPMessage.from_blob(message)
             message_text = our_key.decrypt(encrypted_text_message)

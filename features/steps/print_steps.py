@@ -1,0 +1,84 @@
+import logging
+from pathlib import Path
+from time import sleep
+
+import paramiko
+import pgpy
+from behave import step
+from structlog import wrap_logger
+
+from config import Config
+from utilties.mappings import PACK_CODE_TO_SFTP_DIRECTORY
+from utilties.sftp_utility import SftpUtility
+logger = wrap_logger(logging.getLogger(__name__))
+
+
+# timeout in concourse to stop it going on forever
+@step('all the initial contact print files are produced on the SFTP')
+def wait_for_print_files(context):
+    with SftpUtility() as sftp:
+        while True:
+            initial_contact_files = fetch_all_print_files_paths(sftp)
+            if initial_contact_files:
+                break
+            sleep(10)
+    new_list = []
+    for i in initial_contact_files:
+        if i[5:6] == 'H':
+            new_list.append(f'{Config.SFTP_QM_DIRECTORY}{i}')
+        else:
+            new_list.append(f'{Config.SFTP_PPO_DIRECTORY}{i}')
+    context.all_initial_print_sftp_paths = new_list
+
+
+def fetch_all_print_files_paths(sftp):
+    print_file_paths = []
+    print_file_paths.extend([f'{str(file_name.filename)}' for file_name in
+                             sftp.get_all_print_files_paths(Config.SFTP_QM_DIRECTORY)])
+    print_file_paths.extend([f'{str(file_name.filename)}' for file_name in
+                             sftp.get_all_print_files_paths(Config.SFTP_PPO_DIRECTORY)])
+
+    for packcode in PACK_CODE_TO_SFTP_DIRECTORY.keys():
+        matching_csv_files = [print_file_path for print_file_path in print_file_paths
+                              if print_file_path.startswith(packcode) and print_file_path.endswith('.csv')]
+        matching_manifest_files = [
+            print_file_path for print_file_path in print_file_paths
+            if print_file_path.startswith(packcode) and print_file_path.endswith('.manifest')]
+        if len(matching_csv_files) != 1 and len(matching_manifest_files) != 1:
+            return []
+    return print_file_paths
+
+
+@step('they all have the correct line count')
+def print_file_line_count(context):
+    initial_contact_csv_paths = [path for path in context.all_initial_print_sftp_paths
+                                 if path.endswith('.csv')]
+    sftp = open_sftp_client()
+    for initial_contact_path in initial_contact_csv_paths:
+        with sftp.open(initial_contact_path) as initial_contact_print_file:
+            decrypted_print_file = decrypt_message(initial_contact_print_file.read(), Path(__file__).parents[2]
+                                                   .joinpath('resources', 'dummy_keys', 'our_dummy_private.asc'),
+                                                   'test')
+        assert len(decrypted_print_file) == context.sample_file_lines
+
+
+def decrypt_message(message, key_file_path, key_passphrase):
+    key, _ = pgpy.PGPKey.from_file(key_file_path)
+    with key.unlock(key_passphrase):
+        encrypted_text_message = pgpy.PGPMessage.from_blob(message)
+        message_text = key.decrypt(encrypted_text_message)
+        return message_text.message
+
+
+def open_sftp_client():
+    ssh_client = paramiko.SSHClient()
+    ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh_client.connect(hostname=Config.SFTP_HOST,
+                       port=int(Config.SFTP_PORT),
+                       username=Config.SFTP_USERNAME,
+                       key_filename=str(Path(__file__).parents[2].joinpath(Config.SFTP_KEY_FILENAME)),
+                       passphrase=Config.SFTP_PASSPHRASE,
+                       look_for_keys=False,
+                       timeout=120)
+    sftp = ssh_client.open_sftp()
+    return sftp

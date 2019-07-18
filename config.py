@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 
 class Config:
@@ -8,7 +9,7 @@ class Config:
 
     PROTOCOL = os.getenv('PROTOCOL', 'http')
 
-    ACTION_RULE_DELAY = os.getenv('ACTION_RULE_DELAY')
+    ACTION_RULE_DELAY = os.getenv('ACTION_RULE_DELAY', 1)
     ACTION_SERVICE_HOST = os.getenv('ACTION_SERVICE_HOST', 'localhost')
     ACTION_SERVICE_PORT = os.getenv('ACTION_SERVICE_PORT', '8301')
     ACTION_SERVICE = f'{PROTOCOL}://{ACTION_SERVICE_HOST}:{ACTION_SERVICE_PORT}'
@@ -55,4 +56,5 @@ class Config:
     RABBITMQ_FIELD_TEST_ROUTE = os.getenv('FWMT_ROUTING_KEY', 'Action.Field.binding')
     RABBITMQ_FIELD_EXCHNAGE_NAME = os.getenv('FWMT_EXCHANGE_NAME', 'action-outbound-exchange')
 
-    SAMPLE_SLEEP = os.getenv('SAMPLE_SLEEP')
+    SAMPLE_SLEEP = os.getenv('SAMPLE_SLEEP', 1)
+    SAMPLE_FILE = os.getenv('SAMPLE_FILE', Path('resources/sample_files/sample_file.csv'))
