@@ -8,7 +8,7 @@ from behave import step
 from structlog import wrap_logger
 
 from config import Config
-from utilties.mappings import PACK_CODE_TO_SFTP_DIRECTORY
+from utilties.mappings import PACK_CODE_TO_SFTP_DIRECTORY, PRINT_FILES_EXPECTED
 from utilties.sftp_utility import SftpUtility
 logger = wrap_logger(logging.getLogger(__name__))
 
@@ -23,11 +23,11 @@ def wait_for_print_files(context):
                 break
             sleep(10)
     new_list = []
-    for i in initial_contact_files:
-        if i[5:6] == 'H':
-            new_list.append(f'{Config.SFTP_QM_DIRECTORY}{i}')
+    for contact_file in initial_contact_files:
+        if 'P_IC_H' in contact_file:
+            new_list.append(f'{Config.SFTP_QM_DIRECTORY}{contact_file}')
         else:
-            new_list.append(f'{Config.SFTP_PPO_DIRECTORY}{i}')
+            new_list.append(f'{Config.SFTP_PPO_DIRECTORY}{contact_file}')
     context.all_initial_print_sftp_paths = new_list
 
 
@@ -53,13 +53,18 @@ def fetch_all_print_files_paths(sftp):
 def print_file_line_count(context):
     initial_contact_csv_paths = [path for path in context.all_initial_print_sftp_paths
                                  if path.endswith('.csv')]
+    print_dict = {'print_files': dict(list())}
     sftp = open_sftp_client()
     for initial_contact_path in initial_contact_csv_paths:
         with sftp.open(initial_contact_path) as initial_contact_print_file:
             decrypted_print_file = decrypt_message(initial_contact_print_file.read(), Path(__file__).parents[2]
                                                    .joinpath('resources', 'dummy_keys', 'our_dummy_private.asc'),
                                                    'test')
-        assert len(decrypted_print_file) == context.sample_file_lines
+        print_dict['print_files'][Path(initial_contact_path)] = decrypted_print_file
+
+    for print_file_path, print_file_message in print_dict['print_files'].items():
+        packcode = '_'.join(print_file_path.name.split('_')[0:3])
+        assert PRINT_FILES_EXPECTED[packcode] == len(print_file_message.splitlines())
 
 
 def decrypt_message(message, key_file_path, key_passphrase):
@@ -82,3 +87,4 @@ def open_sftp_client():
                        timeout=120)
     sftp = ssh_client.open_sftp()
     return sftp
+

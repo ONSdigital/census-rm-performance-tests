@@ -58,3 +58,12 @@ class Config:
 
     SAMPLE_SLEEP = os.getenv('SAMPLE_SLEEP', 1)
     SAMPLE_FILE = os.getenv('SAMPLE_FILE', Path('resources/sample_files/sample_file.csv'))
+
+    P_CI_H1_EXPECTED = os.getenv('P_CI_H1_EXPECTED', 9)
+    P_CI_H2_EXPECTED = os.getenv('P_CI_H2_EXPECTED', 9)
+    P_CI_H4_EXPECTED = os.getenv('P_CI_H4_EXPECTED', 1)
+
+    P_CI_ICL1_EXPECTED = os.getenv('P_CI_ICL1_EXPECTED', 12)
+    P_CI_ICL2B_EXPECTED = os.getenv('P_CI_ICL2B_EXPECTED', 12)
+    P_CI_ICL4_EXPECTED = os.getenv('P_CI_ICL4_EXPECTED', 2)
+

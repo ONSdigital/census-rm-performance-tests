@@ -10,7 +10,6 @@ from config import Config
 @step('the sample file has been loaded')
 def loading_sample(context):
     sample_file_name = Path(Config.SAMPLE_FILE)
-    context.sample_file_lines = len(sample_file_name.read_text())
 
     load_sample_file(sample_file_name, context.action_plan_id,
                      context.action_plan_id,
