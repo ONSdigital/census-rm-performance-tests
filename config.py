@@ -9,7 +9,6 @@ class Config:
 
     PROTOCOL = os.getenv('PROTOCOL', 'http')
 
-    ACTION_RULE_DELAY = os.getenv('ACTION_RULE_DELAY', 1)
     ACTION_SERVICE_HOST = os.getenv('ACTION_SERVICE_HOST', 'localhost')
     ACTION_SERVICE_PORT = os.getenv('ACTION_SERVICE_PORT', '8301')
     ACTION_SERVICE = f'{PROTOCOL}://{ACTION_SERVICE_HOST}:{ACTION_SERVICE_PORT}'
@@ -39,6 +38,7 @@ class Config:
     SFTP_PASSPHRASE = os.getenv('SFTP_PASSPHRASE', 'secret')
     SFTP_PPO_DIRECTORY = os.getenv('SFTP_PPO_DIRECTORY', 'ppo_dev/print_services/')
     SFTP_QM_DIRECTORY = os.getenv('SFTP_QM_DIRECTORY', 'qmprint_dev/print_services/')
+    SFTP_POLLING_DELAY = os.getenv('SFTP_POLLING_DELAY', 1)
 
     RECEIPT_TOPIC_PROJECT = os.getenv('RECEIPT_TOPIC_PROJECT', 'project')
     RECEIPT_TOPIC_ID = os.getenv('RECEIPT_TOPIC_ID', 'eq-submission-topic')
@@ -56,7 +56,7 @@ class Config:
     RABBITMQ_FIELD_TEST_ROUTE = os.getenv('FWMT_ROUTING_KEY', 'Action.Field.binding')
     RABBITMQ_FIELD_EXCHNAGE_NAME = os.getenv('FWMT_EXCHANGE_NAME', 'action-outbound-exchange')
 
-    SAMPLE_SLEEP = os.getenv('SAMPLE_SLEEP', 1)
+    DELAY_FOR_ACTION_RULE_AND_SAMPLE_LOAD = os.getenv('DELAY_FOR_ACTION_RULE_AND_SAMPLE_LOAD', 0.5)
     SAMPLE_FILE = os.getenv('SAMPLE_FILE', Path('resources/sample_files/sample_file.csv'))
 
     P_CI_H1_EXPECTED = os.getenv('P_CI_H1_EXPECTED', 9)

@@ -34,7 +34,7 @@ class SftpUtility:
     def __exit__(self, *_):
         self.ssh_client.close()
 
-    def get_all_print_files_paths(self, sftp_directory, prefix='', suffix='', period_start_time=datetime.utcnow()):
+    def get_all_print_files_paths(self, sftp_directory, prefix='', suffix='', period_start_time=datetime.now()):
         files = self._sftp_client.listdir_attr(sftp_directory)
         period = period_start_time.strftime('%Y-%m-%d')
 
@@ -42,6 +42,7 @@ class SftpUtility:
                 _file for _file in files
                 if f'{prefix}_{period}' in _file.filename
                 and _file.filename.endswith(suffix)
+                and period_start_time <= datetime.fromtimestamp(_file.st_mtime)
             ]
 
     def get_files_content_as_list(self, files, prefix):

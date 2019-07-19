@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 from pathlib import Path
 from time import sleep
 
@@ -10,6 +11,7 @@ from structlog import wrap_logger
 from config import Config
 from utilties.mappings import PACK_CODE_TO_SFTP_DIRECTORY, PRINT_FILES_EXPECTED
 from utilties.sftp_utility import SftpUtility
+
 logger = wrap_logger(logging.getLogger(__name__))
 
 
@@ -18,29 +20,23 @@ logger = wrap_logger(logging.getLogger(__name__))
 def wait_for_print_files(context):
     with SftpUtility() as sftp:
         while True:
-            initial_contact_files = fetch_all_print_files_paths(sftp)
-            if initial_contact_files:
+            context.all_initial_print_sftp_paths = fetch_all_print_files_paths(sftp)
+            if context.all_initial_print_sftp_paths:
+                context.produced_print_file_time = datetime.utcnow()
                 break
-            sleep(10)
-    new_list = []
-    for contact_file in initial_contact_files:
-        if 'P_IC_H' in contact_file:
-            new_list.append(f'{Config.SFTP_QM_DIRECTORY}{contact_file}')
-        else:
-            new_list.append(f'{Config.SFTP_PPO_DIRECTORY}{contact_file}')
-    context.all_initial_print_sftp_paths = new_list
+            sleep(int(Config.SFTP_POLLING_DELAY))
 
 
 def fetch_all_print_files_paths(sftp):
     print_file_paths = []
-    print_file_paths.extend([f'{str(file_name.filename)}' for file_name in
+    print_file_paths.extend([f'{Config.SFTP_QM_DIRECTORY}{str(file_name.filename)}' for file_name in
                              sftp.get_all_print_files_paths(Config.SFTP_QM_DIRECTORY)])
-    print_file_paths.extend([f'{str(file_name.filename)}' for file_name in
+    print_file_paths.extend([f'{Config.SFTP_QM_DIRECTORY}{str(file_name.filename)}' for file_name in
                              sftp.get_all_print_files_paths(Config.SFTP_PPO_DIRECTORY)])
 
     for packcode in PACK_CODE_TO_SFTP_DIRECTORY.keys():
         matching_csv_files = [print_file_path for print_file_path in print_file_paths
-                              if print_file_path.startswith(packcode) and print_file_path.endswith('.csv')]
+                              if packcode in print_file_path and print_file_path.endswith('.csv.gpg')]
         matching_manifest_files = [
             print_file_path for print_file_path in print_file_paths
             if print_file_path.startswith(packcode) and print_file_path.endswith('.manifest')]
@@ -66,6 +62,9 @@ def print_file_line_count(context):
         packcode = '_'.join(print_file_path.name.split('_')[0:3])
         assert PRINT_FILES_EXPECTED[packcode] == len(print_file_message.splitlines())
 
+    logger.info('Time to produce print_files', runtime=str(context.produced_print_file_time
+                                                           - context.action_rule_trigger_time))
+
 
 def decrypt_message(message, key_file_path, key_passphrase):
     key, _ = pgpy.PGPKey.from_file(key_file_path)
@@ -87,4 +86,3 @@ def open_sftp_client():
                        timeout=120)
     sftp = ssh_client.open_sftp()
     return sftp
-

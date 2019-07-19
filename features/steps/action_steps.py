@@ -13,7 +13,7 @@ logger = wrap_logger(logging.getLogger(__name__))
 @step("all initial contact action rules have been scheduled in the future")
 def setup_action_plan_and_rules(context):
     action_plan_url = setup_action_plan(context.action_plan_id)
-    setup_action_rules(action_plan_url, action_delay=Config.ACTION_RULE_DELAY)
+    setup_action_rules(context, action_plan_url, action_delay=Config.DELAY_FOR_ACTION_RULE_AND_SAMPLE_LOAD)
 
 
 def setup_action_plan(action_plan_id):
@@ -22,8 +22,9 @@ def setup_action_plan(action_plan_id):
     return action_plan_response_body['_links']['self']['href']
 
 
-def setup_action_rules(action_plan_url, action_delay):
-    trigger_date_time = (datetime.utcnow() + timedelta(minutes=int(action_delay))).isoformat() + 'Z'
+def setup_action_rules(context, action_plan_url, action_delay):
+    context.action_rule_trigger_time = datetime.utcnow() + timedelta(minutes=float(action_delay))
+    trigger_date_time = context.action_rule_trigger_time.isoformat() + 'Z'
     classifiers_for_action_type = {
         'ICL1E': {'treatmentCode': ['HH_LF2R1E', 'HH_LF2R2E', 'HH_LF2R3AE', 'HH_LF2R3BE', 'HH_LF3R1E', 'HH_LF3R2E',
                                     'HH_LF3R3AE', 'HH_LF3R3BE', 'HH_LFNR1E', 'HH_LFNR2E', 'HH_LFNR3AE', 'HH_LFNR3BE']},
