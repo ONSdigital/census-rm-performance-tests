@@ -1,3 +1,4 @@
+import logging
 import uuid
 from datetime import datetime
 
@@ -6,13 +7,9 @@ from utilties.rabbit_context import RabbitContext
 
 
 def before_all(_):
-
-    add_test_queue(Config.RABBITMQ_CASE_TEST_ROUTE, Config.RABBITMQ_RH_EXCHANGE_NAME,
-                   Config.RABBITMQ_RH_OUTBOUND_CASE_QUEUE_TEST)
-    add_test_queue(Config.RABBITMQ_UAC_TEST_ROUTE, Config.RABBITMQ_RH_EXCHANGE_NAME,
-                   Config.RABBITMQ_RH_OUTBOUND_UAC_QUEUE_TEST)
-    add_test_queue(Config.RABBITMQ_FIELD_TEST_ROUTE, Config.RABBITMQ_FIELD_EXCHNAGE_NAME,
-                   Config.RABBITMQ_OUTBOUND_FIELD_QUEUE_TEST, 'direct')
+    logging.getLogger('pika').setLevel('ERROR')
+    logging.getLogger('paramiko').setLevel('ERROR')
+    logging.captureWarnings(True)
 
 
 def before_scenario(context, _):
@@ -27,8 +24,6 @@ def _purge_queues():
         rabbit.channel.queue_purge(queue=Config.RABBITMQ_RH_OUTBOUND_UAC_QUEUE)
         rabbit.channel.queue_purge(queue=Config.RABBITMQ_SAMPLE_INBOUND_QUEUE)
         rabbit.channel.queue_purge(queue=Config.RABBITMQ_OUTBOUND_FIELD_QUEUE)
-        rabbit.channel.queue_purge(queue=Config.RABBITMQ_RH_OUTBOUND_CASE_QUEUE_TEST)
-        rabbit.channel.queue_purge(queue=Config.RABBITMQ_RH_OUTBOUND_UAC_QUEUE_TEST)
         rabbit.channel.queue_purge(queue=Config.RABBITMQ_UNADDRESSED_REQUEST_QUEUE)
 
 

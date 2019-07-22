@@ -6,3 +6,4 @@ Feature: RM produces all initial contact print files within a time window
     When the action rules trigger
     Then all the initial contact print files are produced on the SFTP
     And they all have the correct line count
+    And they are produced within the configured time limit

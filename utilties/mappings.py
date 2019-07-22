@@ -24,11 +24,11 @@ PACK_CODE_TO_DATASET = {
     'P_IC_H4': QM3_2_DATASET
 }
 
-PRINT_FILES_EXPECTED = {
-    'P_IC_H1': Config.P_CI_H1_EXPECTED,
-    'P_IC_H2': Config.P_CI_H2_EXPECTED,
-    'P_IC_H4': Config.P_CI_H4_EXPECTED,
-    'P_IC_ICL1': Config.P_CI_ICL1_EXPECTED,
-    'P_IC_ICL2B': Config.P_CI_ICL2B_EXPECTED,
-    'P_IC_ICL4': Config.P_CI_ICL4_EXPECTED
+PACK_CODE_TO_ACTION_TYPE = {
+    'P_IC_ICL1': 'ICL1E',
+    'P_IC_ICL2B': 'ICL2W',
+    'P_IC_ICL4': 'ICL4N',
+    'P_IC_H1': 'ICHHQE',
+    'P_IC_H2': 'ICHHQW',
+    'P_IC_H4': 'ICHHQN'
 }
