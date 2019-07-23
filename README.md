@@ -37,6 +37,8 @@ Build and push a locally-modified version of the performance tests and then run 
 BUILD=true IMAGE="eu.gcr.io/census-rm-at/rm/census-rm-performance-tests:latest" ENV=test-env ./run_gke.sh
 ```
 
+You can alter the environment variables to use different sample files and timings by editing the [kubernetes.env](kubernetes.env)
+
 ### Script Environment variables
 
 | Name        | Description                                                                                                                                                                                                  | Example                                  | Default              | Required |
