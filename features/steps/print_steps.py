@@ -22,7 +22,7 @@ def wait_for_print_files(context):
                                                          - context.action_rule_trigger_time
                 # TODO nicer way to print within behave
                 print(f'\nTime from action rule trigger to all print files produced: '
-                      f'[{str(context.produced_print_file_time - context.action_rule_trigger_time)}]\n')
+                      f'[{str(context.print_file_production_run_time)}]\n')
                 break
         sleep(int(Config.SFTP_POLLING_DELAY))
 

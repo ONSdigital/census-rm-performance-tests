@@ -39,4 +39,4 @@ class Config:
     ACTION_RULE_DELAY_MINUTES = float(os.getenv('ACTION_RULE_DELAY_MINUTES', 0.3))
     PRINT_FILE_TIME_LIMIT_MINUTES = float(os.getenv('PRINT_FILE_TIME_LIMIT_MINUTES', 10))
     SAMPLE_FILE_PATH = Path(
-        os.getenv('SAMPLE_FILE_PATH', Path('resources').joinpath('sample_files', 'minimal_sample_file.csv')))
+        os.getenv('SAMPLE_FILE_PATH', Path('resources').joinpath('sample_files', '1_per_treatment_code.csv')))
