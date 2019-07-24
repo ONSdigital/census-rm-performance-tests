@@ -30,11 +30,9 @@ def wait_for_print_files(context):
 def fetch_all_print_files_paths(sftp, context):
     print_file_paths = []
     print_file_paths.extend([Path(Config.SFTP_QM_DIRECTORY).joinpath(str(file_name.filename)) for file_name in
-                             sftp.get_all_print_files(Config.SFTP_QM_DIRECTORY, context.action_rule_trigger_time +
-                                                      timedelta(hours=1))])
+                             sftp.get_all_print_files(Config.SFTP_QM_DIRECTORY, context.test_start_local_datetime)])
     print_file_paths.extend([Path(Config.SFTP_PPO_DIRECTORY).joinpath(str(file_name.filename)) for file_name in
-                             sftp.get_all_print_files(Config.SFTP_PPO_DIRECTORY, context.action_rule_trigger_time +
-                                                      timedelta(hours=1))])
+                             sftp.get_all_print_files(Config.SFTP_PPO_DIRECTORY, context.test_start_local_datetime)])
 
     for pack_code in PACK_CODE_TO_SFTP_DIRECTORY.keys():
         matching_csv_files = [print_file_path for print_file_path in print_file_paths
