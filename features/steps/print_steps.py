@@ -15,7 +15,7 @@ from utilties.sftp_utility import SftpUtility
 def wait_for_print_files(context):
     with SftpUtility() as sftp:
         while True:
-            context.all_initial_print_sftp_paths = fetch_all_print_files_paths(sftp)
+            context.all_initial_print_sftp_paths = fetch_all_print_files_paths(sftp, context)
             if context.all_initial_print_sftp_paths:
                 context.produced_print_file_time = datetime.utcnow()
                 context.print_file_production_run_time = context.produced_print_file_time \
@@ -27,12 +27,14 @@ def wait_for_print_files(context):
         sleep(int(Config.SFTP_POLLING_DELAY))
 
 
-def fetch_all_print_files_paths(sftp):
+def fetch_all_print_files_paths(sftp, context):
     print_file_paths = []
     print_file_paths.extend([Path(Config.SFTP_QM_DIRECTORY).joinpath(str(file_name.filename)) for file_name in
-                             sftp.get_all_print_files(Config.SFTP_QM_DIRECTORY)])
+                             sftp.get_all_print_files(Config.SFTP_QM_DIRECTORY, context.action_rule_trigger_time +
+                                                      timedelta(hours=1))])
     print_file_paths.extend([Path(Config.SFTP_PPO_DIRECTORY).joinpath(str(file_name.filename)) for file_name in
-                             sftp.get_all_print_files(Config.SFTP_PPO_DIRECTORY)])
+                             sftp.get_all_print_files(Config.SFTP_PPO_DIRECTORY, context.action_rule_trigger_time +
+                                                      timedelta(hours=1))])
 
     for pack_code in PACK_CODE_TO_SFTP_DIRECTORY.keys():
         matching_csv_files = [print_file_path for print_file_path in print_file_paths

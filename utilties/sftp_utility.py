@@ -28,7 +28,7 @@ class SftpUtility:
     def __exit__(self, *_):
         self.ssh_client.close()
 
-    def get_all_print_files(self, sftp_directory, prefix='', suffix='', period_start_time=datetime.now()):
+    def get_all_print_files(self, sftp_directory, period_start_time, prefix='', suffix='', ):
         files = self.sftp_client.listdir_attr(sftp_directory)
 
         return [
