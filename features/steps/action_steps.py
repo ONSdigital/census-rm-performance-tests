@@ -38,7 +38,7 @@ def get_expected_line_counts(sample_file_path, classifiers_for_action_type):
             expected_line_counts[treatment_code_to_action_type[row['TREATMENT_CODE']]] += 1
 
     # TODO nicer way to print within behave
-    print(f'\nExpected line counts for each action type: {expected_line_counts}\n')
+    print(f'Expected line counts for each action type: {expected_line_counts}\n')
     return expected_line_counts
 
 
@@ -65,4 +65,6 @@ def setup_action_rules(context, action_plan_url, action_rule_delay):
 
 @step("the action rules trigger")
 def wait_for_action_rule_trigger(_context):
+    print(f'Waiting {Config.ACTION_RULE_DELAY_MINUTES} minutes for action rules to trigger '
+          f'at {datetime.now() + timedelta(minutes=Config.ACTION_RULE_DELAY_MINUTES)}\n')
     sleep(Config.ACTION_RULE_DELAY_MINUTES * 60)
