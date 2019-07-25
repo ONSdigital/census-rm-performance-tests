@@ -13,6 +13,7 @@ pgpy = "*"
 requests = "*"
 
 [dev-packages]
+flake8 = "*"
 
 [requires]
 python_version = "3.7"
