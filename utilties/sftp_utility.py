@@ -1,11 +1,10 @@
-import base64
 from datetime import datetime
 
 import paramiko
-import pgpy
 
-from .mappings import PACK_CODE_TO_SFTP_DIRECTORY
 from config import Config
+from utilties.decrypt import decrypt_message
+from .mappings import PACK_CODE_TO_SFTP_DIRECTORY
 
 
 class SftpUtility:
@@ -32,11 +31,11 @@ class SftpUtility:
         files = self.sftp_client.listdir_attr(sftp_directory)
 
         return [
-                _file for _file in files
-                if f'{prefix}' in _file.filename
-                and _file.filename.endswith(suffix)
-                and period_start_time <= datetime.fromtimestamp(_file.st_mtime)
-            ]
+            _file for _file in files
+            if f'{prefix}' in _file.filename
+               and _file.filename.endswith(suffix)
+               and period_start_time <= datetime.fromtimestamp(_file.st_mtime)
+        ]
 
     def get_files_content_as_list(self, files, prefix):
         actual_content = []
@@ -51,7 +50,7 @@ class SftpUtility:
     def _get_file_lines_as_list(self, file_path):
         with self.sftp_client.open(file_path) as sftp_file:
             content = sftp_file.read().decode('utf-8')
-            decrypted_content = self.decrypt_message(content)
+            decrypted_content = decrypt_message(content)
             return decrypted_content.rstrip().split('\n')
 
     def get_file_contents_as_string(self, file_path):
@@ -60,11 +59,3 @@ class SftpUtility:
 
     def get_file_size(self, file_path):
         return self.sftp_client.lstat(file_path).st_size
-
-    def decrypt_message(self, message):
-        our_key, _ = pgpy.PGPKey.from_file('tests/resources/dummy_keys/our_dummy_private.asc')
-        with our_key.unlock('test'):
-            encrypted_text_message = pgpy.PGPMessage.from_blob(message)
-            message_text = our_key.decrypt(encrypted_text_message)
-
-            return message_text.message

@@ -2,10 +2,10 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from time import sleep
 
-import pgpy
 from behave import step
 
 from config import Config
+from utilties.decrypt import decrypt_message
 from utilties.mappings import PACK_CODE_TO_SFTP_DIRECTORY, PACK_CODE_TO_ACTION_TYPE
 from utilties.sftp_utility import SftpUtility
 
@@ -19,7 +19,7 @@ def wait_for_print_files(context):
             if context.all_initial_print_sftp_paths:
                 context.produced_print_file_time = datetime.utcnow()
                 context.print_file_production_run_time = context.produced_print_file_time \
-                                                         - context.action_rule_trigger_time
+                    - context.action_rule_trigger_time
                 # TODO nicer way to print within behave
                 print(f'\nTime from action rule trigger to all print files produced: '
                       f'[{str(context.print_file_production_run_time)}]\n')
@@ -53,25 +53,17 @@ def print_file_line_count(context):
     with SftpUtility() as sftp:
         for print_file_path in print_file_paths:
             with sftp.sftp_client.open(str(print_file_path)) as initial_contact_print_file:
-                decrypted_print_file = decrypt_message(initial_contact_print_file.read(), Path(__file__).parents[2]
-                                                       .joinpath('resources', 'dummy_keys', 'our_dummy_private.asc'),
-                                                       key_passphrase='test')
+                decrypted_print_file = decrypt_message(initial_contact_print_file.read(),
+                                                       private_key_file_path=Config.DECRYPTION_KEY_PATH,
+                                                       private_key_passphrase=Config.DECRYPTION_KEY_PASSPHRASE)
 
-        packcode = '_'.join(print_file_path.name.split('_')[0:3])
-        assert context.expected_line_counts[PACK_CODE_TO_ACTION_TYPE[packcode]] == len(
-            decrypted_print_file.splitlines()), f'The {packcode} file had an incorrect number of lines'
-
-
-def decrypt_message(message, key_file_path, key_passphrase):
-    key, _ = pgpy.PGPKey.from_file(key_file_path)
-    with key.unlock(key_passphrase):
-        encrypted_text_message = pgpy.PGPMessage.from_blob(message)
-        message_text = key.decrypt(encrypted_text_message)
-        return message_text.message
+        pack_code = '_'.join(print_file_path.name.split('_')[0:3])
+        assert context.expected_line_counts[PACK_CODE_TO_ACTION_TYPE[pack_code]] == len(
+            decrypted_print_file.splitlines()), f'The file {print_file_path.name} file has an incorrect number of lines'
 
 
-@step("they are produced within the configured time limit")
-def step_impl(context):
+@step('they are produced within the configured time limit')
+def print_files_produced_within_time_limit(context):
     assert context.print_file_production_run_time < timedelta(minutes=Config.PRINT_FILE_TIME_LIMIT_MINUTES), (
         f'Print file production exceeded time limit: '
         f'limit = [{timedelta(minutes=Config.PRINT_FILE_TIME_LIMIT_MINUTES)}], '
