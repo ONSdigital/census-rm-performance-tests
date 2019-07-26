@@ -64,7 +64,8 @@ def setup_action_rules(context, action_plan_url, action_rule_delay):
 
 
 @step("the action rules trigger")
-def wait_for_action_rule_trigger(_context):
-    print(f'Waiting {Config.ACTION_RULE_DELAY_MINUTES} minutes for action rules to trigger '
-          f'at {datetime.now() + timedelta(minutes=Config.ACTION_RULE_DELAY_MINUTES)}\n')
-    sleep(Config.ACTION_RULE_DELAY_MINUTES * 60)
+def wait_for_action_rule_trigger(context):
+    wait_seconds = (context.action_rule_trigger_time - datetime.utcnow()).total_seconds()
+    print(f'Waiting {wait_seconds / 60} minutes for action rules to trigger '
+          f'at {context.action_rule_trigger_time.time()} UTC\n')
+    sleep(wait_seconds)
