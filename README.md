@@ -7,7 +7,7 @@ You can run the tests locally against the [census-rm-docker-dev](https://github.
 Install dependencies (requires [pipenv](https://docs.pipenv.org/en/latest/)) with `make install`.
 
 Run the tests with `make performance-test`.
-The default sample file has 1 row per treatment code so it can be run through quickly. You change change the target sample file with the `SAMPLE_FILE_PATH` environment variable e.g
+The default sample file has 1 row per treatment code so it can be run through quickly. You can change the target sample file with the `SAMPLE_FILE_PATH` environment variable e.g
 `SAMPLE_FILE_PATH=sample.csv make performance-test`
 
 You can also alter the action rule delay (to allow longer for ingestion of large samples) with `ACTION_RULE_DELAY_MINUTES` and the print file production time limit with `PRINT_FILE_TIME_LIMIT_MINUTES`.
