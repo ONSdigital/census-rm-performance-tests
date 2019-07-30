@@ -1,6 +1,10 @@
 # Census Response Management Performance Tests
 Behave performance tests for Census Response management.
 
+## Sample files
+This test is designed to run a performance test against a representative sample file with all treatment codes. Three dummy [sample files](/resources/sample_files) of various sizes have 
+already been generated in the repo.
+
 ## Run locally
 You can run the tests locally against the [census-rm-docker-dev](https://github.com/ONSdigital/census-rm-docker-dev) services but note that these may have issues with the full sample depending on your docker resource allocation.
 
