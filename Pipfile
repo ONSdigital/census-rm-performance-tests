@@ -4,11 +4,16 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-locustio = "*"
-faker = "*"
-backoff = "*"
+structlog = "*"
+behave = "*"
+pika = "*"
+census-rm-sample-loader = {editable = true,git = "https://github.com/ONSdigital/census-rm-sample-loader",ref = "v0.0.1"}
+paramiko = "*"
+pgpy = "*"
+requests = "*"
 
 [dev-packages]
+flake8 = "*"
 
 [requires]
 python_version = "3.7"
