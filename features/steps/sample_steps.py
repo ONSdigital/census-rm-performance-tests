@@ -22,10 +22,13 @@ def loading_sample(context):
                      user=Config.RABBITMQ_USER, password=Config.RABBITMQ_PASSWORD,
                      queue_name=Config.RABBITMQ_SAMPLE_INBOUND_QUEUE)
 
-    # 1st check that the case.sample.inbound queue is empty
-    time.sleep(5)
+    # 1st check that the case.sample.inbound queue is empty, if it works try removing some of these here sleeps
+    time.sleep(10)
     _check_queue_is_empty("case.sample.inbound")
+    print("case.sample.inbound Is empty")
+    time.sleep(10)
     _check_queue_is_empty("case.action")
+    print("case.action is empty")
 
     time.sleep(10)
 
