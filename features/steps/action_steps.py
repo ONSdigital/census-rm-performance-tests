@@ -12,12 +12,12 @@ from controllers.action_controller import create_action_plan, create_action_rule
 @step("all initial contact action rules have been scheduled for now")
 def setup_action_plan_and_rules(context):
     action_plan_url = setup_action_plan(context.action_plan_id)
-    setup_action_rules(context, action_plan_url, action_rule_delay=1)
+    # CHANGE THIS BACK TO 0000 ZERO, ZILCH
+    setup_action_rules(context, action_plan_url, action_rule_delay=0)
 
 
 def setup_action_plan(action_plan_id):
     action_plan_response_body = create_action_plan(action_plan_id)
-
     return action_plan_response_body['_links']['self']['href']
 
 
