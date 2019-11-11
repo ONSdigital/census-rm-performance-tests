@@ -12,6 +12,7 @@ class Config:
 
     RABBITMQ_HOST = os.getenv('RABBITMQ_SERVICE_HOST', 'localhost')
     RABBITMQ_PORT = os.getenv('RABBITMQ_SERVICE_PORT', '6672')
+    RABBITMQ_MAN_PORT = '16672'
     RABBITMQ_VHOST = os.getenv('RABBITMQ_VHOST', '/')
     RABBITMQ_SAMPLE_INBOUND_QUEUE = os.getenv('RABBITMQ_QUEUE', 'case.sample.inbound')
     RABBITMQ_RH_OUTBOUND_CASE_QUEUE = os.getenv('RABBITMQ_RH_OUTBOUND_CASE_QUEUE', 'case.rh.case')
@@ -40,4 +41,4 @@ class Config:
     ACTION_RULE_DELAY_MINUTES = float(os.getenv('ACTION_RULE_DELAY_MINUTES', 0.3))
     PRINT_FILE_TIME_LIMIT_MINUTES = float(os.getenv('PRINT_FILE_TIME_LIMIT_MINUTES', 10))
     SAMPLE_FILE_PATH = Path(os.getenv('SAMPLE_FILE_PATH',
-                                      PROJECT_PATH.joinpath('resources', 'sample_files', '1_per_treatment_code.csv')))
+                                      PROJECT_PATH.joinpath('resources', 'sample_files', '999_rows.csv')))
