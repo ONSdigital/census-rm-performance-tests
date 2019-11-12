@@ -14,6 +14,8 @@ from config import Config
 def loading_sample(context):
     _clear_down_queues(Config.RABBITMQ_DELAYED_REDELIVERY_QUEUE)
     _clear_down_queues(Config.RABBITMQ_SAMPLE_INBOUND_QUEUE)
+
+    # maybe clear this down again, sometimes seems to fall between the gaps..
     _clear_down_queues(Config.RABBITMQ_DELAYED_REDELIVERY_QUEUE)
 
     sample_file_name = Path(Config.SAMPLE_FILE_PATH)
@@ -34,30 +36,31 @@ def loading_sample(context):
 
 def _check_queue_is_empty(queue_name):
     while True:
-        uri = f'http://{Config.RABBITMQ_HOST}:{Config.RABBITMQ_MAN_PORT}/api/queues/%2f/{queue_name}'
-        response = requests.get(uri, auth=(Config.RABBITMQ_USER, Config.RABBITMQ_PASSWORD))
-        response.raise_for_status()
-
-        response_data = json.loads(response.content)
-
-        if response_data['messages'] == 0:
+        if _get_msg_count(queue_name) == 0:
             return
 
-        
+        time.sleep(1)
 
+
+def _get_msg_count(queue_name):
+    uri = f'http://{Config.RABBITMQ_HOST}:{Config.RABBITMQ_MAN_PORT}/api/queues/%2f/{queue_name}'
+    response = requests.get(uri, auth=(Config.RABBITMQ_USER, Config.RABBITMQ_PASSWORD))
+    response.raise_for_status()
+    response_data = json.loads(response.content)
+
+    return response_data['messages']
+
+
+# GET all queues for api, and clear the fuckers down
 
 def _clear_down_queues(queue_name):
     while True:
-        uri = f'http://{Config.RABBITMQ_HOST}:{Config.RABBITMQ_MAN_PORT}/api/queues/%2f/{queue_name}'
-        response = requests.get(uri, auth=(Config.RABBITMQ_USER, Config.RABBITMQ_PASSWORD))
-        response.raise_for_status()
-
-        response_data = json.loads(response.content)
-
-        if response_data['messages'] == 0:
-            return
-
         uri = f'http://{Config.RABBITMQ_HOST}:{Config.RABBITMQ_MAN_PORT}/api/queues/%2f/{queue_name}/contents'
         response = requests.delete(uri, auth=(Config.RABBITMQ_USER, Config.RABBITMQ_PASSWORD))
         response.raise_for_status()
+
+        if _get_msg_count(queue_name) == 0:
+            return
+
+        time.sleep(1)
 
