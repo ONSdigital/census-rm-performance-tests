@@ -43,4 +43,4 @@ class Config:
     PRINT_FILE_TIME_LIMIT_MINUTES = float(os.getenv('PRINT_FILE_TIME_LIMIT_MINUTES', 10))
     SAMPLE_FILE_PATH = Path(os.getenv('SAMPLE_FILE_PATH',
                                       PROJECT_PATH.joinpath('resources', 'sample_files',
-                                                            '1000_per_treatment_code.csv')))
+                                                            '100_per_treatment_code.csv')))
