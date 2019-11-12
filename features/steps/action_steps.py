@@ -1,6 +1,6 @@
 import csv
 import uuid
-from datetime import timedelta, datetime
+from datetime import datetime
 
 from behave import step
 
@@ -11,8 +11,7 @@ from controllers.action_controller import create_action_plan, create_action_rule
 @step("all initial contact action rules have been scheduled for now")
 def setup_action_plan_and_rules(context):
     action_plan_url = setup_action_plan(context.action_plan_id)
-    # CHANGE THIS BACK TO 0000 ZERO, ZILCH
-    setup_action_rules(context, action_plan_url, action_rule_delay=0)
+    setup_action_rules(context, action_plan_url)
 
 
 def setup_action_plan(action_plan_id):
@@ -41,8 +40,8 @@ def get_expected_line_counts(sample_file_path, classifiers_for_action_type):
     return expected_line_counts
 
 
-def setup_action_rules(context, action_plan_url, action_rule_delay):
-    context.action_rule_trigger_time = datetime.utcnow() + timedelta(minutes=action_rule_delay)
+def setup_action_rules(context, action_plan_url):
+    context.action_rule_trigger_time = datetime.utcnow()
     trigger_date_time = context.action_rule_trigger_time.isoformat() + 'Z'
     classifiers_for_action_type = {
         'ICL1E': {'treatment_code': ['HH_LF2R1E', 'HH_LF2R2E', 'HH_LF2R3AE', 'HH_LF2R3BE', 'HH_LF3R1E', 'HH_LF3R2E',
