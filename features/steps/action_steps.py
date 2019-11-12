@@ -1,7 +1,6 @@
 import csv
 import uuid
 from datetime import timedelta, datetime
-from time import sleep
 
 from behave import step
 
@@ -61,11 +60,3 @@ def setup_action_rules(context, action_plan_url, action_rule_delay):
     for action_type, classifiers in classifiers_for_action_type.items():
         create_action_rule(str(uuid.uuid4()), trigger_date_time, classifiers,
                            action_plan_url, action_type)
-
-
-@step("the action rules trigger")
-def wait_for_action_rule_trigger(context):
-    wait_seconds = (context.action_rule_trigger_time - datetime.utcnow()).total_seconds()
-    print(f'Waiting {wait_seconds / 60} minutes for action rules to trigger '
-          f'at {context.action_rule_trigger_time.time()} UTC\n')
-    sleep(wait_seconds)

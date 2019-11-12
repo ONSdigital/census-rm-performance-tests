@@ -22,16 +22,14 @@ def loading_sample(context):
                      user=Config.RABBITMQ_USER, password=Config.RABBITMQ_PASSWORD,
                      queue_name=Config.RABBITMQ_SAMPLE_INBOUND_QUEUE)
 
+    # we want this at the start as it takes a while for msgs to appear on some of the queues
+    time.sleep(5)
     _check_queue_is_empty("case.sample.inbound")
-    print("case.sample.inbound Is empty")
     _check_queue_is_empty("case.action")
-    print("case.action is empty")
 
 
 def _check_queue_is_empty(queue_name):
     while True:
-        # we want this at the start as it takes a while for msgs to appear on some of the queues
-        time.sleep(5)
         uri = f'http://{Config.RABBITMQ_HOST}:{Config.RABBITMQ_MAN_PORT}/api/queues/%2f/{queue_name}'
         response = requests.get(uri, auth=(Config.RABBITMQ_USER, Config.RABBITMQ_PASSWORD))
         response.raise_for_status()
