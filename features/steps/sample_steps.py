@@ -22,10 +22,10 @@ def loading_sample(context):
                      user=Config.RABBITMQ_USER, password=Config.RABBITMQ_PASSWORD,
                      queue_name=Config.RABBITMQ_SAMPLE_INBOUND_QUEUE)
 
-    # we want this at the start as it takes a while for msgs to appear on some of the queues
-    time.sleep(5)
-    _check_queue_is_empty("case.sample.inbound")
-    _check_queue_is_empty("case.action")
+    # Not ideal but seems to not work sometimes otherwise, shouldn't have time ramifications though
+    time.sleep(10)
+    _check_queue_is_empty(Config.RABBITMQ_SAMPLE_INBOUND_QUEUE)
+    _check_queue_is_empty(Config.RABBITMQ_SAMPLE_TO_ACTION_QUEUE)
 
 
 def _check_queue_is_empty(queue_name):
