@@ -36,7 +36,7 @@ class RabbitContext:
         if self.queue_name == 'localtest':
             self._channel.queue_declare(queue=self.queue_name)
 
-        return self._connection, self._channel
+        return self._connection
 
     def close_connection(self):
         self._connection.close()
