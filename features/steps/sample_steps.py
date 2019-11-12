@@ -38,3 +38,5 @@ def _check_queue_is_empty(queue_name):
 
         if response_data['messages'] == 0:
             return
+
+        time.sleep(1)
