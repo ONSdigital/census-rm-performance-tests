@@ -12,6 +12,10 @@ from config import Config
 
 @step("the sample file has been loaded fully into the action db")
 def loading_sample(context):
+    _clear_down_queues(Config.RABBITMQ_DELAYED_REDELIVERY_QUEUE)
+    _clear_down_queues(Config.RABBITMQ_SAMPLE_INBOUND_QUEUE)
+    _clear_down_queues(Config.RABBITMQ_DELAYED_REDELIVERY_QUEUE)
+
     sample_file_name = Path(Config.SAMPLE_FILE_PATH)
 
     context.sample_load_time = datetime.utcnow()
@@ -38,3 +42,22 @@ def _check_queue_is_empty(queue_name):
 
         if response_data['messages'] == 0:
             return
+
+        
+
+
+def _clear_down_queues(queue_name):
+    while True:
+        uri = f'http://{Config.RABBITMQ_HOST}:{Config.RABBITMQ_MAN_PORT}/api/queues/%2f/{queue_name}'
+        response = requests.get(uri, auth=(Config.RABBITMQ_USER, Config.RABBITMQ_PASSWORD))
+        response.raise_for_status()
+
+        response_data = json.loads(response.content)
+
+        if response_data['messages'] == 0:
+            return
+
+        uri = f'http://{Config.RABBITMQ_HOST}:{Config.RABBITMQ_MAN_PORT}/api/queues/%2f/{queue_name}/contents'
+        response = requests.delete(uri, auth=(Config.RABBITMQ_USER, Config.RABBITMQ_PASSWORD))
+        response.raise_for_status()
+

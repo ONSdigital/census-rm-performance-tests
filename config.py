@@ -16,6 +16,7 @@ class Config:
     RABBITMQ_VHOST = os.getenv('RABBITMQ_VHOST', '/')
     RABBITMQ_SAMPLE_INBOUND_QUEUE = os.getenv('RABBITMQ_QUEUE', 'case.sample.inbound')
     RABBITMQ_SAMPLE_TO_ACTION_QUEUE = 'case.action'
+    RABBITMQ_DELAYED_REDELIVERY_QUEUE = "delayedRedeliveryQueue"
     RABBITMQ_RH_OUTBOUND_CASE_QUEUE = os.getenv('RABBITMQ_RH_OUTBOUND_CASE_QUEUE', 'case.rh.case')
     RABBITMQ_RH_OUTBOUND_UAC_QUEUE = os.getenv('RABBITMQ_RH_OUTBOUND_UAC_QUEUE', 'case.rh.uac')
     RABBITMQ_UNADDRESSED_REQUEST_QUEUE = os.getenv('RABBITMQ_UNADDRESSED_REQUEST_QUEUE', 'unaddressedRequestQueue')
@@ -41,13 +42,13 @@ class Config:
 
     ACTION_RULE_DELAY_MINUTES = float(os.getenv('ACTION_RULE_DELAY_MINUTES', 0.3))
     PRINT_FILE_TIME_LIMIT_MINUTES = float(os.getenv('PRINT_FILE_TIME_LIMIT_MINUTES', 120))
-    SAMPLE_FILE_PATH = Path(os.getenv('SAMPLE_FILE_PATH',
-                                      PROJECT_PATH.joinpath('resources', 'sample_files',
-                                                            '100_per_treatment_code.csv')))
-
     # SAMPLE_FILE_PATH = Path(os.getenv('SAMPLE_FILE_PATH',
     #                                   PROJECT_PATH.joinpath('resources', 'sample_files',
-    #                                                         '1000_per_treatment_code.csv')))
+    #                                                         '100_per_treatment_code.csv')))
+
+    SAMPLE_FILE_PATH = Path(os.getenv('SAMPLE_FILE_PATH',
+                                      PROJECT_PATH.joinpath('resources', 'sample_files',
+                                                            '1000_per_treatment_code.csv')))
 
     # SAMPLE_FILE_PATH = Path(os.getenv('SAMPLE_FILE_PATH',
     #                                   PROJECT_PATH.joinpath('resources', 'sample_files',
