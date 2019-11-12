@@ -34,10 +34,10 @@ def before_scenario(context, _):
 def _clear_down_all_queues():
     all_queues = _get_all_queues()
 
-    for q in all_queues:
+    for queue in all_queues:
         # keep killing this Delayed queue, just to stop it redlivering anything in some mad race condition
         _clear_down_queue(Config.RABBITMQ_DELAYED_REDELIVERY_QUEUE)
-        _clear_down_queue(q)
+        _clear_down_queue(queue)
 
 
 def _get_all_queues():
@@ -46,7 +46,7 @@ def _get_all_queues():
     response.raise_for_status()
     response_data = json.loads(response.content)
 
-    return [r['name'] for r in response_data]
+    return [queue['name'] for queue in response_data]
 
 
 def _clear_down_queue(queue_name):
