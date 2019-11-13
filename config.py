@@ -12,7 +12,7 @@ class Config:
 
     RABBITMQ_HOST = os.getenv('RABBITMQ_SERVICE_HOST', 'localhost')
     RABBITMQ_PORT = os.getenv('RABBITMQ_SERVICE_PORT', '6672')
-    RABBITMQ_MAN_PORT = os.getenv('RABBITMQ_MAN_PORT', 16672')
+    RABBITMQ_MAN_PORT = os.getenv('RABBITMQ_MAN_PORT', '16672')
     RABBITMQ_VHOST = os.getenv('RABBITMQ_VHOST', '/')
     RABBITMQ_SAMPLE_INBOUND_QUEUE = os.getenv('RABBITMQ_QUEUE', 'case.sample.inbound')
     RABBITMQ_SAMPLE_TO_ACTION_QUEUE = 'case.action'
