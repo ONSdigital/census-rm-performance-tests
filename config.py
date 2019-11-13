@@ -16,12 +16,12 @@ class Config:
     RABBITMQ_VHOST = os.getenv('RABBITMQ_VHOST', '/')
     RABBITMQ_SAMPLE_INBOUND_QUEUE = os.getenv('RABBITMQ_QUEUE', 'case.sample.inbound')
     RABBITMQ_SAMPLE_TO_ACTION_QUEUE = 'case.action'
-    RABBITMQ_DELAYED_REDELIVERY_QUEUE = "delayedRedeliveryQueue"
     RABBITMQ_RH_OUTBOUND_CASE_QUEUE = os.getenv('RABBITMQ_RH_OUTBOUND_CASE_QUEUE', 'case.rh.case')
     RABBITMQ_RH_OUTBOUND_UAC_QUEUE = os.getenv('RABBITMQ_RH_OUTBOUND_UAC_QUEUE', 'case.rh.uac')
     RABBITMQ_UNADDRESSED_REQUEST_QUEUE = os.getenv('RABBITMQ_UNADDRESSED_REQUEST_QUEUE', 'unaddressedRequestQueue')
     RABBITMQ_OUTBOUND_FIELD_QUEUE = os.getenv('RABBITMQ_OUTBOUND_FIELD_QUEUE', 'Action.Field')
     RABBITMQ_INBOUND_EQ_QUEUE = os.getenv('RABBITMQ_INBOUND_EQ_QUEUE', 'Case.Responses')
+    RABBITMQ_DELAYED_REDELIVERY_QUEUE = 'delayedRedeliveryQueue'
     RABBITMQ_EXCHANGE = os.getenv('RABBITMQ_EXCHANGE', '')
     RABBITMQ_USER = os.getenv('RABBITMQ_USER', 'guest')
     RABBITMQ_PASSWORD = os.getenv('RABBITMQ_PASSWORD', 'guest')
@@ -45,4 +45,4 @@ class Config:
 
     SAMPLE_FILE_PATH = Path(os.getenv('SAMPLE_FILE_PATH',
                                       PROJECT_PATH.joinpath('resources', 'sample_files',
-                                                            '1000_per_treatment_code.csv')))
+                                                            '100_per_treatment_code.csv')))
