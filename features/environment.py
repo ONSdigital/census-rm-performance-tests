@@ -10,15 +10,6 @@ from config import Config
 from utilties.rabbit_context import RabbitContext
 
 
-def get_msg_count(queue_name):
-    uri = f'http://{Config.RABBITMQ_HOST}:{Config.RABBITMQ_MAN_PORT}/api/queues/%2f/{queue_name}'
-    response = requests.get(uri, auth=(Config.RABBITMQ_USER, Config.RABBITMQ_PASSWORD))
-    response.raise_for_status()
-    response_data = json.loads(response.content)
-
-    return response_data['messages']
-
-
 def before_all(_):
     logging.getLogger('pika').setLevel('ERROR')
     logging.getLogger('paramiko').setLevel('ERROR')
@@ -29,6 +20,15 @@ def before_scenario(context, _):
     context.test_start_local_datetime = datetime.now()
     context.action_plan_id = str(uuid.uuid4())
     _clear_down_all_queues()
+
+
+def get_msg_count(queue_name):
+    uri = f'http://{Config.RABBITMQ_HOST}:{Config.RABBITMQ_MAN_PORT}/api/queues/%2f/{queue_name}'
+    response = requests.get(uri, auth=(Config.RABBITMQ_USER, Config.RABBITMQ_PASSWORD))
+    response.raise_for_status()
+    response_data = json.loads(response.content)
+
+    return response_data['messages']
 
 
 def _clear_down_all_queues():
