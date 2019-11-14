@@ -21,6 +21,7 @@ def load_sample(context):
                      user=Config.RABBITMQ_USER, password=Config.RABBITMQ_PASSWORD,
                      queue_name=Config.RABBITMQ_SAMPLE_INBOUND_QUEUE)
 
+
 @step("the sample has been fully ingested into action scheduler database")
 def wait_for_full_sample_ingest(context):
     # Not ideal but seems to not work sometimes otherwise, shouldn't have time ramifications though
