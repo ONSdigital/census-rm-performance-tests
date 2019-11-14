@@ -8,7 +8,7 @@ from config import Config
 from controllers.action_controller import create_action_plan, create_action_rule
 
 
-@step("all initial contact action rules have been scheduled for now")
+@step("all initial contact action rules are scheduled for now")
 def setup_action_plan_and_rules(context):
     action_plan_url = setup_action_plan(context.action_plan_id)
     setup_action_rules(context, action_plan_url)
