@@ -51,4 +51,6 @@ kubectl run performance-tests -it --command --rm --quiet --generator=run-pod/v1 
     --env=SFTP_QM_DIRECTORY=$(kubectl get configmap project-config -o=jsonpath="{.data.sftp-qm-supplier-directory}") \
     --env=RABBITMQ_USER=$(kubectl get secret rabbitmq -o=jsonpath="{.data.rabbitmq-username}" | base64 --decode) \
     --env=RABBITMQ_PASSWORD=$(kubectl get secret rabbitmq -o=jsonpath="{.data.rabbitmq-password}" | base64 --decode) \
+    --env=RABBITMQ_MAN_PORT=15672 \
+    --env=SAMPLE_FILE_PATH=resources/sample_files/1_per_treatment_code.csv \
     -- /bin/bash -c "sleep 2; behave --no-capture"
