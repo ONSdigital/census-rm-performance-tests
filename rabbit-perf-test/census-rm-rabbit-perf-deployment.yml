@@ -1,0 +1,53 @@
+  apiVersion: apps/v1beta1
+  kind: Deployment
+  metadata:
+    name: census-rm-rabbit-perf
+    labels:
+      app: census-rm-rabbit-perf
+      env: prod
+  spec:
+    replicas: 1
+    strategy:
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
+      type: RollingUpdate
+    template:
+      metadata:
+        name: census-rm-rabbit-perf
+        labels:
+          app: census-rm-rabbit-perf
+          env: prod
+      spec:
+        containers:
+        - name: census-rm-rabbit-perf
+          image: eu.gcr.io/census-rm-performance/rm/census-rm-rabbit-performance:latest
+          command: ["/bin/bash", "-c", "--"]
+          args: [ "while true; do sleep 30; done;" ]
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "128Mi"
+            limits:
+              cpu: "250m"
+              memory: "256Mi"
+          env:
+          - name: RABBITMQ_SERVICE_HOST
+            value: "rabbitmq"
+          - name: RABBITMQ_SERVICE_PORT
+            value: "5672"
+          - name: RABBITMQ_HTTP_PORT
+            value: "15672"
+          - name: RABBITMQ_USER
+            valueFrom:
+              secretKeyRef:
+                name: rabbitmq
+                key: rabbitmq-username
+          - name: RABBITMQ_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: rabbitmq
+                key: rabbitmq-password
+          - name: URI
+            value: "amqp://guest:${RABBITMQ_PASSWORD}@rabbitmq-discovery.default.svc.cluster.local"
