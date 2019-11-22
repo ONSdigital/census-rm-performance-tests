@@ -65,7 +65,8 @@ gcloud beta container clusters get-credentials rm-k8s-cluster --region <REGION> 
 kubectl apply -f rabbit-perf-test/census-rm-rabbit-perf-deployment.yml
 ```
 
-Shell into pod to run a basic test
+Shell into pod to run a basic test.
+This test is continuous so you need to 'CTRL C' to stop it.
 ```bash
 ./basic-test.sh
 ```
