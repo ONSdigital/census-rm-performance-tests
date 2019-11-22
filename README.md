@@ -75,6 +75,7 @@ For documentation on running tests:
 https://rabbitmq.github.io/rabbitmq-perf-test/stable/htmlsingle/#using-environment-variables-as-options
 
 Running a bench mark test:
+You need to edit password for your RabbitMQ cluster.
 ```bash
 bin/runjava com.rabbitmq.perf.PerfTestMulti publish-consume-spec.js publish-consume-result.js 
 ```
