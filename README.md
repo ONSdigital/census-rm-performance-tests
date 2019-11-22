@@ -57,6 +57,11 @@ You can alter the environment variables to use different sample files and timing
 Run
 ```bash
 make rabbitmq-perf-tool
+docker push eu.gcr.io/census-rm-ci/rm/census-rm-rabbit-performance
+```
+Set Kubectl to census-rm-performance
+```bash
+kubectl apply -f eu.gcr.io/census-rm-ci/rm/census-rm-rabbit-performance
 ```
 
 Shell into pod to run a basic test
