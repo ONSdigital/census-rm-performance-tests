@@ -49,5 +49,3 @@
               secretKeyRef:
                 name: rabbitmq
                 key: rabbitmq-password
-          - name: URI
-            value: "amqp://guest:${RABBITMQ_PASSWORD}@rabbitmq-discovery.default.svc.cluster.local"
