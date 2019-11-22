@@ -61,7 +61,7 @@ docker push eu.gcr.io/census-rm-ci/rm/census-rm-rabbit-performance
 ```
 Set Kubectl to census-rm-performance
 ```bash
-kubectl apply -f eu.gcr.io/census-rm-ci/rm/census-rm-rabbit-performance
+kubectl apply -f rabbit-perf-test/census-rm-rabbit-perf-deployment.yml
 ```
 
 Shell into pod to run a basic test
