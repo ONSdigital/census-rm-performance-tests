@@ -72,7 +72,7 @@ Shell into pod to run a basic test
 
 For documentation on running tests:
 
-https://rabbitmq.github.io/rabbitmq-perf-test/stable/htmlsingle/#using-environment-variables-as-options
+https://rabbitmq.github.io/rabbitmq-perf-test/stable/htmlsingle/
 
 Running a bench mark test:
 You need to edit publish-consume-spec.js password for your RabbitMQ cluster.
