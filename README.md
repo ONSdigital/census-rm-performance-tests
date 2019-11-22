@@ -59,8 +59,9 @@ Run
 make rabbitmq-perf-tool
 docker push eu.gcr.io/census-rm-ci/rm/census-rm-rabbit-performance
 ```
-Set Kubectl to census-rm-performance
+Set Kubectl to census-rm-performance and then apply the deployment
 ```bash
+gcloud beta container clusters get-credentials rm-k8s-cluster --region <REGION> --project <PERFORMANCE_PROJECT_NAME>
 kubectl apply -f rabbit-perf-test/census-rm-rabbit-perf-deployment.yml
 ```
 
