@@ -21,7 +21,7 @@
       spec:
         containers:
         - name: census-rm-rabbit-perf
-          image: eu.gcr.io/census-rm-performance/rm/census-rm-rabbit-performance:latest
+          image: eu.gcr.io/census-rm-ci/rm/census-rm-rabbit-performance:latest
           command: ["/bin/bash", "-c", "--"]
           args: [ "while true; do sleep 30; done;" ]
           imagePullPolicy: Always
