@@ -78,7 +78,7 @@ https://rabbitmq.github.io/rabbitmq-perf-test/stable/htmlsingle/
 Running a bench mark test:
 You need to create a benchmark specification file. Please refer to documentation link below. A script has been provided to produce a valid publish-consume-spec.js example specification including the URI for your rabbit cluster.
 ```bash
-test/make-benchmark-spec.sh
+./tests/make-benchmark-spec.sh > tests/publish-consume-spec.js
 bin/runjava com.rabbitmq.perf.PerfTestMulti tests/publish-consume-spec.js publish-consume-result.js 
 ```
 For documentation on benchmarking see:
