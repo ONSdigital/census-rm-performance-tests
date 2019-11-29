@@ -52,5 +52,38 @@ You can alter the environment variables to use different sample files and timing
 | `BUILD`     | A boolean (`true` or not set string) to toggle the build and push of the performance tests as a Docker image.                                                                       | `IMAGE=true`                                                                 | None                                                             | no       |
 | `NAMESPACE` | The k8s namespace to run the performance tests as a pod in.                                                                                                                         | `NAMESPACE=rm`                                                               | None                                                             | no       |
 
+### Run RabbitMQ Performance testing
+
+Run
+```bash
+make rabbitmq-perf-test
+docker push eu.gcr.io/census-rm-ci/rm/census-rm-rabbit-performance
+```
+Set Kubectl to census-rm-performance and then apply the deployment
+```bash
+gcloud beta container clusters get-credentials rm-k8s-cluster --region <REGION> --project <PERFORMANCE_PROJECT_NAME>
+kubectl apply -f rabbit-perf-test/census-rm-rabbit-perf-deployment.yml
+```
+
+Shell into pod to run a basic test.
+This test is continuous so you need to 'CTRL C' to stop it.
+```bash
+tests/basic-test.sh
+```
+
+For documentation on running tests:
+
+https://rabbitmq.github.io/rabbitmq-perf-test/stable/htmlsingle/
+
+Running a bench mark test:
+You need to create a benchmark specification file. Please refer to documentation link below. A script has been provided to produce a valid publish-consume-spec.js example specification including the URI for your rabbit cluster.
+```bash
+./tests/make-benchmark-spec.sh > tests/publish-consume-spec.js
+bin/runjava com.rabbitmq.perf.PerfTestMulti tests/publish-consume-spec.js publish-consume-result.js 
+```
+For documentation on benchmarking see:
+https://github.com/rabbitmq/rabbitmq-perf-test/blob/master/html/README.md
+
+
 ## Copyright
 Copyright (c) 2018 Crown Copyright (Office for National Statistics)

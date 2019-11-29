@@ -14,3 +14,6 @@ test: lint check performance-test
 
 build:
 	docker build -t eu.gcr.io/census-rm-ci/census-rm-performance-tests .
+
+rabbitmq-perf-test:
+	docker build -t eu.gcr.io/census-rm-ci/rm/census-rm-rabbit-performance rabbit-perf-test
