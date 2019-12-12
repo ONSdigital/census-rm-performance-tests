@@ -30,6 +30,7 @@ run:
       # Create an performance tests pod and run the performance tests in it
       # Env vars have to passed one by one as a --env flag each
       # The sleep is to give kubectl time to attach properly, otherwise the first few log lines are lost
+      set +x
       kubectl run performance-tests -it --command --rm --quiet \
       --generator=run-pod/v1 \
       --image=${PERFORMANCE_TESTS_IMAGE} \
