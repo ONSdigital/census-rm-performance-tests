@@ -21,10 +21,11 @@ def wait_for_print_files(context):
                 context.produced_print_file_time = datetime.utcnow()
                 context.print_file_production_run_time = context.produced_print_file_time \
                     - context.action_rule_trigger_time
-                print(json.dumps({
+                time_taken_metric = json.dumps({
                     'event': 'Time from action rule trigger to all print files produced',
                     'time_in_seconds': str(context.print_file_production_run_time.total_seconds())
-                }) + "\n")
+                })
+                print(f'{time_taken_metric}\n')
                 break
         sleep(int(Config.SFTP_POLLING_DELAY))
 
