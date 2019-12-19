@@ -22,7 +22,8 @@ def wait_for_print_files(context):
                 context.print_file_production_run_time = context.produced_print_file_time \
                     - context.action_rule_trigger_time
                 time_taken_metric = json.dumps({
-                    'event': 'Time from action rule trigger to all print files produced',
+                    'event_description': 'Time from action rule trigger to all print files produced',
+                    'event_type': 'ACTION_RULE_TO_PRINT',
                     'time_in_seconds': str(context.print_file_production_run_time.total_seconds())
                 })
                 print(f'{time_taken_metric}\n')
