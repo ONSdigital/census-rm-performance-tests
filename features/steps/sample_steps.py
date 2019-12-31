@@ -1,3 +1,4 @@
+import json
 import time
 from datetime import datetime
 from pathlib import Path
@@ -29,8 +30,13 @@ def wait_for_full_sample_ingest(context):
     _wait_for_queue_to_be_drained(Config.RABBITMQ_SAMPLE_INBOUND_QUEUE)
     _wait_for_queue_to_be_drained(Config.RABBITMQ_SAMPLE_TO_ACTION_QUEUE)
     context.sample_fully_ingested_time = datetime.utcnow()
-    print(f'Time to fully ingest sample into action scheduler: '
-          f'[{str(context.sample_fully_ingested_time - context.sample_load_start_time)}]\n')
+    time_taken = context.sample_fully_ingested_time - context.sample_load_start_time
+    time_taken_metric = json.dumps({
+        'event_description': 'Time to fully ingest sample into action scheduler',
+        'event_type': 'SAMPLE_INGEST_TO_ACTION_CASES',
+        'time_in_seconds': str(time_taken.total_seconds())
+    })
+    print(f'{time_taken_metric}\n')
 
 
 def _wait_for_queue_to_be_drained(queue_name):

@@ -1,3 +1,4 @@
+import json
 from datetime import datetime, timedelta
 from pathlib import Path
 from time import sleep
@@ -20,9 +21,12 @@ def wait_for_print_files(context):
                 context.produced_print_file_time = datetime.utcnow()
                 context.print_file_production_run_time = context.produced_print_file_time \
                     - context.action_rule_trigger_time
-                # TODO nicer way to print within behave
-                print(f'Time from action rule trigger to all print files produced: '
-                      f'[{str(context.print_file_production_run_time)}]\n')
+                time_taken_metric = json.dumps({
+                    'event_description': 'Time from action rule trigger to all print files produced',
+                    'event_type': 'ACTION_RULE_TO_PRINT',
+                    'time_in_seconds': str(context.print_file_production_run_time.total_seconds())
+                })
+                print(f'{time_taken_metric}\n')
                 break
         sleep(int(Config.SFTP_POLLING_DELAY))
 
