@@ -4,7 +4,6 @@ image_resource:
   source:
     repository: eu.gcr.io/census-gcr/gcloud-kubectl
 params:
-  ENV:
   SERVICE_ACCOUNT_JSON:
   KUBERNETES_CLUSTER:
   GCP_PROJECT_NAME:
@@ -20,11 +19,11 @@ inputs:
         # Use gcloud service account to configure kubectl
         gcloud auth activate-service-account --key-file ~/gcloud-service-key.json
         gcloud container clusters get-credentials ${KUBERNETES_CLUSTER} --zone europe-west2 --project ${GCP_PROJECT_NAME}
-        
+
         # Stop Postgresql instance
         SQL_NAME=`gcloud sql instances list --format="value(name)"`
         echo $SQL_NAME
         gcloud sql instances patch $SQL_NAME --activation-policy ALWAYS
         # Scale down cluster
-        yes | gcloud container clusters resize $(KUBERNETES_CLUSTER) --num-nodes 0 --node-pool=default-node-pool --region=europe-west2
-        yes | gcloud container clusters resize $(KUBERNETES_CLUSTER) --num-nodes 0 --node-pool=rabbit-node-pool --region=europe-west2
+        gcloud container clusters resize $(KUBERNETES_CLUSTER) --num-nodes 0 --node-pool=default-node-pool --region=europe-west2 --quiet
+        gcloud container clusters resize $(KUBERNETES_CLUSTER) --num-nodes 0 --node-pool=rabbit-node-pool --region=europe-west2 --quiet

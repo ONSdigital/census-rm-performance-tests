@@ -4,7 +4,6 @@ image_resource:
   source:
     repository: eu.gcr.io/census-gcr/gcloud-kubectl
 params:
-  ENV:
   SERVICE_ACCOUNT_JSON:
   KUBERNETES_CLUSTER:
   GCP_PROJECT_NAME:
@@ -26,5 +25,5 @@ inputs:
         echo $SQL_NAME
         gcloud sql instances patch $SQL_NAME --activation-policy ALWAYS
         # Scale up cluster
-        yes | gcloud container clusters resize $(KUBERNETES_CLUSTER) --num-nodes 2 --node-pool=default-node-pool --region=europe-west2
-        yes | gcloud container clusters resize $(KUBERNETES_CLUSTER) --num-nodes 1 --node-pool=rabbit-node-pool --region=europe-west2
+        gcloud container clusters resize $(KUBERNETES_CLUSTER) --num-nodes 2 --node-pool=default-node-pool --region=europe-west2 --quiet
+        gcloud container clusters resize $(KUBERNETES_CLUSTER) --num-nodes 1 --node-pool=rabbit-node-pool --region=europe-west2 --quiet
