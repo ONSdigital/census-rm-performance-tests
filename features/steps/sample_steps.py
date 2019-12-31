@@ -9,10 +9,17 @@ from config import Config
 from features.environment import get_msg_count
 
 
+@step("the sample file has been loaded from the bucket")
+def load_bucket_sample_file(context):
+    load_file(context, Config.BUCKET_SAMPLE_FILE_PATH)
+
+
 @step("the sample file has been loaded")
 def load_sample(context):
-    sample_file_name = Path(Config.SAMPLE_FILE_PATH)
+    load_file(context, Path(Config.SAMPLE_FILE_PATH))
 
+
+def load_file(context, sample_file_name):
     context.sample_load_start_time = datetime.utcnow()
     load_sample_file(sample_file_name, context.action_plan_id,
                      context.action_plan_id,
@@ -24,7 +31,7 @@ def load_sample(context):
 
 @step("the sample has been fully ingested into action scheduler database")
 def wait_for_full_sample_ingest(context):
-    # Not ideal but seems to not work sometimes otherwise, shouldn't have time ramifications though
+    # Wait required to consistently work
     time.sleep(10)
     _wait_for_queue_to_be_drained(Config.RABBITMQ_SAMPLE_INBOUND_QUEUE)
     _wait_for_queue_to_be_drained(Config.RABBITMQ_SAMPLE_TO_ACTION_QUEUE)

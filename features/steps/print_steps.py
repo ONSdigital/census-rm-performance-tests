@@ -68,3 +68,11 @@ def print_files_produced_within_time_limit(context):
         f'Print file production exceeded time limit: '
         f'limit = [{timedelta(minutes=Config.PRINT_FILE_TIME_LIMIT_MINUTES)}], '
         f'actual = [{context.print_file_production_run_time}]')
+
+
+@step("they are produced within the time limit {time_limit_minutes} minutes")
+def print_file_producted_in_minutes(context, time_limit_minutes):
+    assert context.print_file_production_run_time < timedelta(minutes=time_limit_minutes), (
+        f'Print file production exceeded time limit: '
+        f'limit = [{timedelta(minutes=time_limit_minutes)}], '
+        f'actual = [{context.print_file_production_run_time}]')
