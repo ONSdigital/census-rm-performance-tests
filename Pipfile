@@ -11,6 +11,8 @@ census-rm-sample-loader = {editable = true,git = "https://github.com/ONSdigital/
 paramiko = "*"
 pgpy = "*"
 requests = "*"
+google-cloud-storage = "*"
+cloudstorage = "*"
 
 [dev-packages]
 flake8 = "*"

@@ -1,4 +1,5 @@
 import time
+from google.cloud import storage
 from datetime import datetime
 from pathlib import Path
 
@@ -11,16 +12,35 @@ from features.environment import get_msg_count
 
 @step("the sample file has been loaded from the bucket")
 def load_bucket_sample_file(context):
-    load_file(context, Config.BUCKET_SAMPLE_FILE_PATH)
+    client = storage.Client()
+
+
+    bucket = client.get_bucket('census-rm-lukeloze-sample-files')
+    # blob = storage.Blob('sample_file.csv', bucket)
+    blob = storage.Blob('100_per_treatment_code.csv', bucket)
+
+    context.sample_file = 'holder.csv'
+
+    with open(context.sample_file, 'wb+') as file_obj:
+        client.download_blob_to_file(blob, file_obj)
+
+    print('downloaded file, trying to load file now')
+
+    load_file(context, Path(context.sample_file))
+    # load_file(context, Path(Config.SAMPLE_FILE_PATH))
 
 
 @step("the sample file has been loaded")
 def load_sample(context):
+    context.sample_file = Config.SAMPLE_FILE_PATH
     load_file(context, Path(Config.SAMPLE_FILE_PATH))
 
 
 def load_file(context, sample_file_name):
     context.sample_load_start_time = datetime.utcnow()
+
+    print('Sample file name: ', sample_file_name)
+
     load_sample_file(sample_file_name, context.action_plan_id,
                      context.action_plan_id,
                      host=Config.RABBITMQ_HOST, port=Config.RABBITMQ_PORT,

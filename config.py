@@ -45,6 +45,7 @@ class Config:
 
     SAMPLE_FILE_PATH = Path(
         os.getenv('SAMPLE_FILE_PATH', PROJECT_PATH.joinpath('resources',
-                                                            'sample_files', '100_per_treatment_code.csv')))
+                                                            'sample_files', '1000_per_treatment_code.csv')))
 
-    BUCKET_SAMPLE_FILE_PATH = 'gs://census-rm-performance-sample-files/sample_file.csv'
+    # BUCKET_SAMPLE_FILE_PATH = 'gs://census-rm-performance-sample-files/sample_file.csv'
+    BUCKET_SAMPLE_FILE_PATH = 'https://storage.cloud.google.com/census-rm-lukeloze-sample-files/sample_file.csv?organizationId=884444642818'

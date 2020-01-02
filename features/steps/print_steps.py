@@ -58,8 +58,14 @@ def print_file_line_count(context):
                                                        private_key_passphrase=Config.DECRYPTION_KEY_PASSPHRASE)
 
         pack_code = '_'.join(print_file_path.name.split('_')[0:3])
+
+        expected_count = context.expected_line_counts[PACK_CODE_TO_ACTION_TYPE[pack_code]]
+        actual_count = len(decrypted_print_file.splitlines())
+
         assert context.expected_line_counts[PACK_CODE_TO_ACTION_TYPE[pack_code]] == len(
-            decrypted_print_file.splitlines()), f'The file {print_file_path.name} file has an incorrect number of lines'
+            decrypted_print_file.splitlines()), \
+            f'The file {print_file_path.name} file has an incorrect number of lines expected {expected_count}' \
+            f' actual: {actual_count}'
 
 
 @step('they are produced within the configured time limit')
@@ -72,7 +78,7 @@ def print_files_produced_within_time_limit(context):
 
 @step("they are produced within the time limit {time_limit_minutes} minutes")
 def print_file_producted_in_minutes(context, time_limit_minutes):
-    assert context.print_file_production_run_time < timedelta(minutes=time_limit_minutes), (
+    assert context.print_file_production_run_time < timedelta(minutes=int(time_limit_minutes)), (
         f'Print file production exceeded time limit: '
         f'limit = [{timedelta(minutes=time_limit_minutes)}], '
         f'actual = [{context.print_file_production_run_time}]')
