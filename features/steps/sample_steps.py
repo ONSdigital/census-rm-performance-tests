@@ -14,12 +14,13 @@ from features.environment import get_msg_count
 def load_bucket_sample_file(context):
     client = storage.Client()
 
-
-    bucket = client.get_bucket('census-rm-lukeloze-sample-files')
+    bucket = client.get_bucket('census-rm-luke-loze-17-sample-files')
     # blob = storage.Blob('sample_file.csv', bucket)
-    blob = storage.Blob('100_per_treatment_code.csv', bucket)
+    blob = storage.Blob('1000_per_treatment_code.csv', bucket)
 
-    context.sample_file = 'holder.csv'
+    # blob = storage.Blob('350000_sample_file.csv', bucket)
+
+    context.sample_file = 'sample_file.csv'
 
     with open(context.sample_file, 'wb+') as file_obj:
         client.download_blob_to_file(blob, file_obj)
@@ -27,7 +28,6 @@ def load_bucket_sample_file(context):
     print('downloaded file, trying to load file now')
 
     load_file(context, Path(context.sample_file))
-    # load_file(context, Path(Config.SAMPLE_FILE_PATH))
 
 
 @step("the sample file has been loaded")
