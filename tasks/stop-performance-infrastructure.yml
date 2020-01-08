@@ -23,7 +23,7 @@ inputs:
         # Stop Postgresql instance
         SQL_NAME=`gcloud sql instances list --format="value(name)"`
         echo $SQL_NAME
-        gcloud sql instances patch $SQL_NAME --activation-policy ALWAYS
+        gcloud sql instances patch $SQL_NAME --activation-policy NEVER
         # Scale down cluster
         gcloud container clusters resize $(KUBERNETES_CLUSTER) --num-nodes 0 --node-pool=default-node-pool --region=europe-west2 --quiet
         gcloud container clusters resize $(KUBERNETES_CLUSTER) --num-nodes 0 --node-pool=rabbit-node-pool --region=europe-west2 --quiet
