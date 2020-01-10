@@ -14,25 +14,22 @@ from features.environment import get_msg_count
 def load_bucket_sample_file(context):
     client = storage.Client()
 
-    bucket = client.get_bucket('census-rm-luke-loze-17-sample-files')
-    # blob = storage.Blob('sample_file.csv', bucket)
-    blob = storage.Blob('1000_per_treatment_code.csv', bucket)
+    bucket = client.get_bucket(Config.SAMPLE_FILE_BUCKET)
+    blob = storage.Blob(Config.THREE_AND_HALF_MILLION_SAMPLE_FILE_PATH, bucket)
 
-    # blob = storage.Blob('350000_sample_file.csv', bucket)
-
-    context.sample_file = 'sample_file.csv'
+    context.sample_file = 'sample_file_from_bucket.csv'
 
     with open(context.sample_file, 'wb+') as file_obj:
         client.download_blob_to_file(blob, file_obj)
 
-    print('downloaded file, trying to load file now')
+    print('downloaded file from gcp bucket, attempting loading now')
 
     load_file(context, Path(context.sample_file))
 
 
 @step("the sample file has been loaded")
 def load_sample(context):
-    context.sample_file = Config.SAMPLE_FILE_PATH
+    context.sample_file = '10_per_code.csv'
     load_file(context, Path(Config.SAMPLE_FILE_PATH))
 
 
