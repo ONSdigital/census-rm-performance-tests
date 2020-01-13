@@ -18,12 +18,10 @@ inputs:
         EOL
         # Use gcloud service account to configure kubectl
         gcloud auth activate-service-account --key-file ~/gcloud-service-key.json
-        gcloud container clusters get-credentials ${KUBERNETES_CLUSTER} --zone europe-west2 --project ${GCP_PROJECT_NAME}
-        
+
         # Start Postgresql instance
         SQL_NAME=`gcloud sql instances list --format="value(name)"`
         echo $SQL_NAME
         gcloud sql instances patch $SQL_NAME --activation-policy ALWAYS
-        # Scale up cluster
-        gcloud container clusters resize $(KUBERNETES_CLUSTER) --num-nodes 2 --node-pool=default-node-pool --region=europe-west2 --quiet
-        gcloud container clusters resize $(KUBERNETES_CLUSTER) --num-nodes 1 --node-pool=rabbit-node-pool --region=europe-west2 --quiet
+
+#      Let Terraform deal with scaling k8s node pools - uses the appropriate count from the TF variables

@@ -20,10 +20,17 @@ inputs:
         gcloud auth activate-service-account --key-file ~/gcloud-service-key.json
         gcloud container clusters get-credentials ${KUBERNETES_CLUSTER} --zone europe-west2 --project ${GCP_PROJECT_NAME}
 
-        # Stop Postgresql instance
-        SQL_NAME=`gcloud sql instances list --format="value(name)"`
-        echo $SQL_NAME
-        gcloud sql instances patch $SQL_NAME --activation-policy NEVER
-        # Scale down cluster
-        gcloud container clusters resize $(KUBERNETES_CLUSTER) --num-nodes 0 --node-pool=default-node-pool --region=europe-west2 --quiet
-        gcloud container clusters resize $(KUBERNETES_CLUSTER) --num-nodes 0 --node-pool=rabbit-node-pool --region=europe-west2 --quiet
+#        Delete Postgresql read replica
+        PG_REPLICA_NAME=`gcloud sql instances list --filter="name:replica*" --format="value(name)"`
+        gcloud sql instances delete $PG_REPLICA_NAME --quiet
+
+#        Stop database master as Terraform hates it being deleted
+        PG_DB_NAME=`gcloud sql instances list --filter="NOT name:replica*" --format="value(name)"`
+        gcloud sql instances patch $PG_DB_NAME --activation-policy NEVER
+
+#        Delete cluster node pools
+        NODE_POOL_LIST=`gcloud container node-pools list --cluster=${KUBERNETES_CLUSTER} --region=europe-west2 --format="value(name)"`
+        for NODE_POOL in $NODE_POOL_LIST ; do
+          echo scaling $NODE_POOL
+          gcloud container node-pools delete $NODE_POOL --cluster=${KUBERNETES_CLUSTER} --region=europe-west2 --quiet
+        done
