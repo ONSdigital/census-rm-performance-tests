@@ -21,16 +21,16 @@ else
         --project $GCP_PROJECT
 fi
 
-#if [ "$BUILD" = "true" ]; then
-#    echo "Building and pushing Docker image [$IMAGE]..."
-#    read -p "Are you sure (y/N)? " -n 1 -r
-#    if [[ $REPLY =~ ^[Yy]$ ]]; then
-#        docker build -t $IMAGE .
-#        docker push $IMAGE
-#    else
-#        exit 1
-#    fi
-#fi
+if [ "$BUILD" = "true" ]; then
+    echo "Building and pushing Docker image [$IMAGE]..."
+    read -p "Are you sure (y/N)? " -n 1 -r
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        docker build -t $IMAGE .
+        docker push $IMAGE
+    else
+        exit 1
+    fi
+fi
 
 docker build -t $IMAGE .
 docker push $IMAGE

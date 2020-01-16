@@ -24,6 +24,8 @@ def wait_for_print_files(context):
                 print(f'Time from action rule trigger to all print files produced: '
                       f'[{str(context.print_file_production_run_time)}]\n')
                 break
+
+        print('Failed to find the files')
         sleep(int(Config.SFTP_POLLING_DELAY))
 
 

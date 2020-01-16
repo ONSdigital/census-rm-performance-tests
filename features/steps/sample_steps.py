@@ -29,7 +29,7 @@ def load_bucket_sample_file(context):
 
 @step("the sample file has been loaded")
 def load_sample(context):
-    context.sample_file = '10_per_code.csv'
+    context.sample_file = Config.SAMPLE_FILE_PATH
     load_file(context, Path(Config.SAMPLE_FILE_PATH))
 
 
