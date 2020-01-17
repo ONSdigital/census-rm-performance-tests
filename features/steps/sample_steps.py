@@ -10,7 +10,7 @@ from config import Config
 from features.environment import get_msg_count
 
 
-@step('the sample file {sample_file} has been loaded from the bucket {bucket}')
+@step('the sample file "{sample_file}" has been loaded from the bucket "{bucket}"')
 def load_bucket_sample_file(context, sample_file, bucket):
     client = storage.Client()
 
