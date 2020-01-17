@@ -32,9 +32,6 @@ if [ "$BUILD" = "true" ]; then
     fi
 fi
 
-docker build -t $IMAGE .
-docker push $IMAGE
-
 echo "Using RM Performance Tests image [$IMAGE]."
 if [ "$NAMESPACE" ]; then
     kubectl config set-context $(kubectl config current-context) --namespace=$NAMESPACE

@@ -55,10 +55,21 @@ def _get_all_queues():
 
 
 def _clear_down_queue(queue_name):
+    failed_attempts = 0
+
     while True:
         uri = f'http://{Config.RABBITMQ_HOST}:{Config.RABBITMQ_MAN_PORT}/api/queues/%2f/{queue_name}/contents'
         response = requests.delete(uri, auth=(Config.RABBITMQ_USER, Config.RABBITMQ_PASSWORD))
-        response.raise_for_status()
+
+        if response.status_code != 200 and response.status_code != 204:
+            # When clearing down very large queues, e.g. millions of rows on rh.case.uac it can timeout, so retry
+            failed_attempts = failed_attempts + 1
+
+            if failed_attempts >= 10:
+                response.raise_for_status()
+
+            print(f'Failed with {response.status_code} retry attempt {failed_attempts}')
+            time.sleep(10)
 
         if get_msg_count(queue_name) == 0:
             return
