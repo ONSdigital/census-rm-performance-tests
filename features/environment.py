@@ -35,7 +35,6 @@ def _clear_down_all_queues():
     all_queues = _get_all_queues()
 
     for queue in all_queues:
-        print(f"Clearing down {queue}")
         # keep killing this Delayed queue, just to stop it redlivering anything in some mad race condition
         _clear_down_queue(Config.RABBITMQ_DELAYED_REDELIVERY_QUEUE)
         _clear_down_queue(queue)

@@ -22,7 +22,7 @@ def load_bucket_sample_file(context, sample_file, bucket):
     with open(context.sample_file, 'wb+') as file_obj:
         client.download_blob_to_file(blob, file_obj)
 
-    print('downloaded file from gcp bucket, attempting loading now')
+    print(f'downloaded file {sample_file} from gcp bucket {bucket}, now loading')
 
     load_file(context, Path(context.sample_file))
 
@@ -35,8 +35,6 @@ def load_sample(context):
 
 def load_file(context, sample_file_name):
     context.sample_load_start_time = datetime.utcnow()
-
-    print('Sample file name: ', sample_file_name)
 
     load_sample_file(sample_file_name, context.action_plan_id,
                      context.action_plan_id,
