@@ -25,7 +25,6 @@ def wait_for_print_files(context):
                       f'[{str(context.print_file_production_run_time)}]\n')
                 break
 
-        print('Failed to find the files')
         sleep(int(Config.SFTP_POLLING_DELAY))
 
 
@@ -61,13 +60,8 @@ def print_file_line_count(context):
 
         pack_code = '_'.join(print_file_path.name.split('_')[0:3])
 
-        expected_count = context.expected_line_counts[PACK_CODE_TO_ACTION_TYPE[pack_code]]
-        actual_count = len(decrypted_print_file.splitlines())
-
         assert context.expected_line_counts[PACK_CODE_TO_ACTION_TYPE[pack_code]] == len(
-            decrypted_print_file.splitlines()), \
-            f'The file {print_file_path.name} file has an incorrect number of lines expected {expected_count}' \
-            f' actual: {actual_count}'
+            decrypted_print_file.splitlines()), f'The file {print_file_path.name} file has an incorrect number of lines'
 
 
 @step('they are produced within the configured time limit')

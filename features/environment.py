@@ -32,11 +32,7 @@ def get_msg_count(queue_name):
 
 
 def _clear_down_all_queues():
-    print("Trying to get all queues for cleardown")
-
     all_queues = _get_all_queues()
-
-    print("Got queues for cleardown")
 
     for queue in all_queues:
         print(f"Clearing down {queue}")
