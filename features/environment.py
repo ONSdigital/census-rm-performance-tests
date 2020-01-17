@@ -16,7 +16,11 @@ def before_all(_):
     logging.captureWarnings(True)
 
 
-def before_scenario(context, _):
+def before_scenario(context, scenario):
+    if "skip" in scenario.effective_tags:
+        scenario.skip("Marked with @skip")
+        return
+
     context.test_start_local_datetime = datetime.now()
     context.action_plan_id = str(uuid.uuid4())
     _clear_down_all_queues()
