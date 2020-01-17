@@ -10,12 +10,12 @@ from config import Config
 from features.environment import get_msg_count
 
 
-@step("the sample file has been loaded from the bucket")
-def load_bucket_sample_file(context):
+@step('the sample file {sample_file} has been loaded from the bucket {bucket}')
+def load_bucket_sample_file(context, sample_file, bucket):
     client = storage.Client()
 
-    bucket = client.get_bucket(Config.SAMPLE_FILE_BUCKET)
-    blob = storage.Blob(Config.THREE_AND_HALF_MILLION_SAMPLE_FILE_PATH, bucket)
+    bucket = client.get_bucket(bucket)
+    blob = storage.Blob(sample_file, bucket)
 
     context.sample_file = 'sample_file_from_bucket.csv'
 

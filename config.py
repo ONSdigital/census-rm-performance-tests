@@ -45,7 +45,3 @@ class Config:
 
     SAMPLE_FILE_PATH = Path(PROJECT_PATH.joinpath('resources', 'sample_files', '10_per_code.csv'))
 
-    THREE_AND_HALF_MILLION_SAMPLE_FILE_PATH = os.getenv('THREE_AND_HALF_MILLION_SAMPLE_FILE_PATH',
-                                                        '10_per_code.csv')
-
-    SAMPLE_FILE_BUCKET = os.getenv('SAMPLE_FILE_BUCKET', 'census-rm-luke-loze-29-sample-files')

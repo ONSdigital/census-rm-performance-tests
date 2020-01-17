@@ -9,7 +9,7 @@ Feature: RM produces all initial contact print files within a time window
     And they are produced within the configured time limit
 
   Scenario: 3.5 Million Sample load through to initial contact print file production
-    Given the sample file has been loaded from the bucket
+    Given the sample file "10_per_code.csv" has been loaded from the bucket "census-rm-luke-loze-29-sample-files"
     And the sample has been fully ingested into action scheduler database
     When all initial contact action rules are scheduled for now
     Then all the initial contact print files are produced on the SFTP
