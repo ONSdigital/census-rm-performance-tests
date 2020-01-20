@@ -4,7 +4,6 @@ from datetime import datetime
 
 from behave import step
 
-from config import Config
 from controllers.action_controller import create_action_plan, create_action_rule
 
 
