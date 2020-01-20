@@ -45,3 +45,6 @@ class Config:
 
     SAMPLE_FILE_PATH = Path(os.getenv('SAMPLE_FILE_PATH', PROJECT_PATH.joinpath('resources', 'sample_files',
                                                                                 '100_per_treatment_code.csv')))
+
+    SAMPLE_BUCKET = os.getenv('SAMPLE_BUCKET', 'census-rm-performance-test-files')
+    THREE_MILLION_SAMPLE_FILE = os.getenv('THREE_MILLION_SAMPLE_FILE', '3_5_million_sample.csv')

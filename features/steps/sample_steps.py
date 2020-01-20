@@ -10,19 +10,19 @@ from config import Config
 from features.environment import get_msg_count
 
 
-@step('the sample file "{sample_file}" has been loaded from the bucket "{bucket}"')
-def load_bucket_sample_file(context, sample_file, bucket):
+@step("the sample file has been loaded from the bucket")
+def load_bucket_sample_file(context):
     client = storage.Client()
 
-    bucket = client.get_bucket(bucket)
-    blob = storage.Blob(sample_file, bucket)
+    bucket = client.get_bucket(Config.SAMPLE_BUCKET)
+    blob = storage.Blob(Config.THREE_MILLION_SAMPLE_FILE, bucket)
 
     context.sample_file = 'sample_file_from_bucket.csv'
 
     with open(context.sample_file, 'wb+') as file_obj:
         client.download_blob_to_file(blob, file_obj)
 
-    print(f'downloaded file {sample_file} from gcp bucket {bucket}, now loading')
+    print(f'downloaded file {Config.THREE_MILLION_SAMPLE_FILE} from gcp bucket {Config.SAMPLE_BUCKET}, now loading')
 
     load_file(context, Path(context.sample_file))
 
