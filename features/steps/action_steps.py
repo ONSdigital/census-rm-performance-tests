@@ -4,7 +4,6 @@ from datetime import datetime
 
 from behave import step
 
-from config import Config
 from controllers.action_controller import create_action_plan, create_action_rule
 
 
@@ -55,7 +54,7 @@ def setup_action_rules(context, action_plan_url):
                                       'HH_QFNR1W', 'HH_QFNR2W', 'HH_QFNR3AW']},
         'ICHHQN': {'treatment_code': ['HH_3QSFN']}
     }
-    context.expected_line_counts = get_expected_line_counts(Config.SAMPLE_FILE_PATH, classifiers_for_action_type)
+    context.expected_line_counts = get_expected_line_counts(context.sample_file, classifiers_for_action_type)
     for action_type, classifiers in classifiers_for_action_type.items():
         create_action_rule(str(uuid.uuid4()), trigger_date_time, classifiers,
                            action_plan_url, action_type)
