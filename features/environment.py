@@ -26,6 +26,10 @@ def before_scenario(context, scenario):
     _clear_down_all_queues()
 
 
+def after_all(_):
+    _clear_down_all_queues()
+
+
 def get_msg_count(queue_name):
     uri = f'http://{Config.RABBITMQ_HOST}:{Config.RABBITMQ_MAN_PORT}/api/queues/%2f/{queue_name}'
     response = requests.get(uri, auth=(Config.RABBITMQ_USER, Config.RABBITMQ_PASSWORD))
