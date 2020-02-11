@@ -26,10 +26,6 @@ def before_scenario(context, scenario):
     _clear_down_all_queues()
 
 
-def after_all(_):
-    _clear_down_all_queues()
-
-
 def get_msg_count(queue_name):
     uri = f'http://{Config.RABBITMQ_HOST}:{Config.RABBITMQ_MAN_PORT}/api/queues/%2f/{queue_name}'
     response = requests.get(uri, auth=(Config.RABBITMQ_USER, Config.RABBITMQ_PASSWORD))
@@ -41,9 +37,10 @@ def get_msg_count(queue_name):
 
 def _clear_down_all_queues():
     all_queues = _get_all_queues()
+    print(f'About to clear down queues: {all_queues}')
 
     for queue in all_queues:
-        # keep killing this Delayed queue, just to stop it redlivering anything in some mad race condition
+        # keep killing this Delayed queue, just to stop it redelivering anything in some mad race condition
         _clear_down_queue(Config.RABBITMQ_DELAYED_REDELIVERY_QUEUE)
         _clear_down_queue(queue)
 
@@ -58,6 +55,7 @@ def _get_all_queues():
 
 
 def _clear_down_queue(queue_name):
+    print(f'Clearing down queue: {queue_name}')
     failed_attempts = 0
 
     while True:
