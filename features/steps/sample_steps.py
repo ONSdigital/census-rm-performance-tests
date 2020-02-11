@@ -56,7 +56,8 @@ def wait_for_full_sample_ingest(context):
     time_taken_metric = json.dumps({
         'event_description': 'Time to fully ingest sample into action scheduler',
         'event_type': 'SAMPLE_INGEST_TO_ACTION_CASES',
-        'time_in_seconds': str(time_taken.total_seconds())
+        'time_in_seconds': str(time_taken.total_seconds()),
+        'time_taken': str(time_taken)
     })
     print(f'{time_taken_metric}\n')
 
