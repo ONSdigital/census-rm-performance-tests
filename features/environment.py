@@ -37,7 +37,6 @@ def get_msg_count(queue_name):
 
 def _clear_down_all_queues():
     all_queues = _get_all_queues()
-    print(f'About to clear down queues: {all_queues}')
 
     for queue in all_queues:
         # keep killing this Delayed queue, just to stop it redelivering anything in some mad race condition
@@ -55,7 +54,6 @@ def _get_all_queues():
 
 
 def _clear_down_queue(queue_name):
-    print(f'Clearing down queue: {queue_name}')
     failed_attempts = 0
 
     while True:
