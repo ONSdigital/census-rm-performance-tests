@@ -24,7 +24,8 @@ def wait_for_print_files(context):
                 time_taken_metric = json.dumps({
                     'event_description': 'Time from action rule trigger to all print files produced',
                     'event_type': 'ACTION_RULE_TO_PRINT',
-                    'time_in_seconds': str(context.print_file_production_run_time.total_seconds())
+                    'time_in_seconds': str(context.print_file_production_run_time.total_seconds()),
+                    'time_taken': str(context.print_file_production_run_time)
                 })
                 print(f'{time_taken_metric}\n')
                 break
