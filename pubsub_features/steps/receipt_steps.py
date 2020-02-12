@@ -22,10 +22,7 @@ def receipt_performance_test(context):
             "questionnaire_id": "999",
         }
     })
-    print('Instatiating PubSub PublisherClient')
     publisher = pubsub_v1.PublisherClient()
-
-    print('Getting PubSub topic')
     topic_path = publisher.topic_path(Config.PUBSUB_PROJECT, Config.PUBSUB_TOPIC)
 
     test_start_time = datetime.utcnow()
@@ -36,7 +33,6 @@ def receipt_performance_test(context):
 
     test_complete_time = datetime.utcnow() - test_start_time
 
-    print('Purging queue')
     _clear_down_queue(Config.CASE_RECEIPT_QUEUE_NAME)
 
     time_taken_metric = json.dumps({
@@ -49,17 +45,14 @@ def receipt_performance_test(context):
 
 
 def publish_message(publisher, json_message, topic_path):
-    print('Publishing message')
     publisher.publish(topic_path, json_message.encode('utf-8'), eventType='OBJECT_FINALIZE',
                       bucketId='eq-bucket',
                       objectId=str(uuid.uuid4()))
-    print('Published message')
 
 
 def wait_for_queue_to_reach_target(queue_name, target):
     loop_start_time = datetime.utcnow()
     while get_msg_count(queue_name) < target:
         time.sleep(1)
-        print(f'Seen {get_msg_count(queue_name)} messages so far')
         if (datetime.utcnow() - loop_start_time).total_seconds() > 3600:
             assert "Pubsub messages not published within time limit"

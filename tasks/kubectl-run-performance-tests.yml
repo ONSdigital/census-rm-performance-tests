@@ -10,6 +10,7 @@ params:
   GCP_PROJECT_NAME:
   KUBERNETES_CLUSTER:
   PERFORMANCE_TESTS_IMAGE:
+  CASE_PROCESSOR_REPLICAS:
 
 inputs:
 - name: performance-tests-repo
