@@ -48,6 +48,8 @@ run:
       --env=RABBITMQ_USER=$(kubectl get secret rabbitmq -o=jsonpath="{.data.rabbitmq-username}" | base64 --decode) \
       --env=RABBITMQ_PASSWORD=$(kubectl get secret rabbitmq -o=jsonpath="{.data.rabbitmq-password}" | base64 --decode) \
       --env=RABBITMQ_MAN_PORT=15672 \
+      --env=GOOGLE_SERVICE_ACCOUNT_JSON=$(kubectl get secret pubsub-credentials -o=jsonpath="{.data['service-account-key\.json']}") \
+      --env=GOOGLE_APPLICATION_CREDENTIALS="/home/performancetests/service-account-key.json" \
       -- /bin/bash -c "sleep 2; behave pubsub_features --tags=~@local-docker --no-capture"
 
       kubectl scale deployment case-processor --replicas=$CASE_PROCESSOR_REPLICAS
