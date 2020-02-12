@@ -2,12 +2,37 @@ import datetime
 import json
 import time
 import uuid
+from pathlib import Path
 
 from behave import step
 from google.cloud import pubsub_v1
 
 from config import Config
 from features.environment import get_msg_count, _clear_down_queue
+from features.steps.sample_steps import load_file, _wait_for_queue_to_be_drained
+
+
+@step("the sample file has been loaded")
+def load_sample(context):
+    context.sample_file = Config.SAMPLE_FILE_PATH
+    load_file(context, Path(Config.SAMPLE_FILE_PATH))
+
+
+@step("the sample has been fully ingested into action scheduler database")
+def wait_for_full_sample_ingest(context):
+    # Wait required to consistently work
+    time.sleep(10)
+    _wait_for_queue_to_be_drained(Config.RABBITMQ_SAMPLE_INBOUND_QUEUE)
+    _wait_for_queue_to_be_drained(Config.RABBITMQ_SAMPLE_TO_ACTION_QUEUE)
+    context.sample_fully_ingested_time = datetime.utcnow()
+    time_taken = context.sample_fully_ingested_time - context.sample_load_start_time
+    time_taken_metric = json.dumps({
+        'event_description': 'Time to fully ingest sample into action scheduler',
+        'event_type': 'SAMPLE_INGEST_TO_ACTION_CASES',
+        'time_in_seconds': str(time_taken.total_seconds()),
+        'time_taken': str(time_taken)
+    })
+    print(f'{time_taken_metric}\n')
 
 
 @step("we can receipt the cases at an acceptable rate")
