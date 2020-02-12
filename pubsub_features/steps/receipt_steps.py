@@ -7,7 +7,7 @@ from behave import step
 from google.cloud import pubsub_v1
 
 from config import Config
-from features.environment import get_msg_count
+from features.environment import get_msg_count, _clear_down_queue
 
 
 @step("we can receipt the cases at an acceptable rate")
@@ -32,6 +32,8 @@ def receipt_performance_test(context):
     wait_for_queue_to_reach_target(Config.CASE_RECEIPT_QUEUE_NAME, test_quantity)
 
     test_complete_time = datetime.utcnow() - test_start_time
+
+    _clear_down_queue(Config.CASE_RECEIPT_QUEUE_NAME)
 
     time_taken_metric = json.dumps({
         'event_description': f'Time for pubsub service to process {test_quantity} Google Pubsub messages',
