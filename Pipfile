@@ -12,6 +12,7 @@ paramiko = "*"
 pgpy = "*"
 requests = "*"
 google-cloud-storage = "*"
+google-cloud-pubsub = "*"
 
 [dev-packages]
 flake8 = "*"
