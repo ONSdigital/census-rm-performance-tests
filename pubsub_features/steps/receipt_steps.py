@@ -1,7 +1,7 @@
-import datetime
 import json
 import time
 import uuid
+from datetime import datetime
 
 from behave import step
 from google.cloud import pubsub_v1
