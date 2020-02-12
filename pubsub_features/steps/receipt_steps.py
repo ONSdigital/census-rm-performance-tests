@@ -6,12 +6,13 @@ import uuid
 from behave import step
 from google.cloud import pubsub_v1
 
+from config import Config
 from features.environment import get_msg_count
 
 
 @step("we can receipt the cases at an acceptable rate")
 def receipt_performance_test(context):
-    test_quantity = 5000
+    test_quantity = Config.PUBSUB_MESSAGE_QUANTITY
 
     json_message = json.dumps({
         "timeCreated": "2008-08-24T00:00:00Z",
@@ -22,13 +23,13 @@ def receipt_performance_test(context):
         }
     })
     publisher = pubsub_v1.PublisherClient()
-    topic_path = publisher.topic_path("census-rm-performance", "receipting-topic-performance")
+    topic_path = publisher.topic_path(Config.PUBSUB_PROJECT, Config.PUBSUB_TOPIC)
 
     test_start_time = datetime.utcnow()
     for _ in range(0, test_quantity):
         publish_message(publisher, json_message, topic_path)
 
-    wait_for_queue_to_reach_target("Case.Responses", test_quantity)
+    wait_for_queue_to_reach_target(Config.CASE_RECEIPT_QUEUE_NAME, test_quantity)
 
     test_complete_time = datetime.utcnow() - test_start_time
 

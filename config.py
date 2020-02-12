@@ -48,3 +48,10 @@ class Config:
 
     SAMPLE_BUCKET = os.getenv('SAMPLE_BUCKET', 'census-rm-performance-sample-files')
     THREE_MILLION_SAMPLE_FILE = os.getenv('THREE_MILLION_SAMPLE_FILE', '3_5_million_sample.csv')
+
+    PUBSUB_MESSAGE_QUANTITY = 5000
+    CASE_RECEIPT_QUEUE_NAME = "Case.Responses"
+    PUBSUB_PROJECT = os.getenv('PUBSUB_PROJECT', "census-rm-performance")
+    PUBSUB_TOPIC = os.getenv('PUBSUB_TOPIC', "receipting-topic-performance")
+
+
