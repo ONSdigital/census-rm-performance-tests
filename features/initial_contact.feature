@@ -1,5 +1,6 @@
 Feature: RM produces all initial contact print files within a time window
 
+  @three-hundred-and-fifty-thousand
   Scenario: Sample load through to initial contact print file production
     Given the sample file has been loaded
     And the sample has been fully ingested into action scheduler database
@@ -8,6 +9,7 @@ Feature: RM produces all initial contact print files within a time window
     And they all have the correct line count
     And they are produced within the configured time limit
 
+  @three-and-a-half-million
   Scenario: 3.5 Million Sample load through to initial contact print file production
     Given the sample file has been loaded from the bucket
     And the sample has been fully ingested into action scheduler database
