@@ -28,6 +28,8 @@ run:
       gcloud auth activate-service-account --key-file ~/gcloud-service-key.json
       gcloud container clusters get-credentials ${KUBERNETES_CLUSTER} --zone europe-west2 --project ${GCP_PROJECT_NAME}
 
+      export TEST_SCENARIO=`gsutil cat gs://census-rm-performance-sample-files/target-scenario-tag.txt`
+
       # THIS IS THE NEW PUBSUB PERFORMANCE TEST FANDANGO
       kubectl scale deployment case-processor --replicas=0
 
@@ -51,7 +53,7 @@ run:
       --env=RABBITMQ_MAN_PORT=15672 \
       --env=GOOGLE_SERVICE_ACCOUNT_JSON=$(kubectl get secret pubsub-credentials -o=jsonpath="{.data['service-account-key\.json']}") \
       --env=GOOGLE_APPLICATION_CREDENTIALS="/home/performancetests/service-account-key.json" \
-      -- /bin/bash -c "sleep 2; behave pubsub_features --tags=~@local-docker --no-capture"
+      -- /bin/bash -c "sleep 2; behave pubsub_features --tags=${TEST_SCENARIO} --no-capture"
 
       kubectl scale deployment case-processor --replicas=$CASE_PROCESSOR_REPLICAS
       kubectl rollout status deploy case-processor --watch=true --timeout=200s
@@ -74,4 +76,4 @@ run:
       --env=RABBITMQ_USER=$(kubectl get secret rabbitmq -o=jsonpath="{.data.rabbitmq-username}" | base64 --decode) \
       --env=RABBITMQ_PASSWORD=$(kubectl get secret rabbitmq -o=jsonpath="{.data.rabbitmq-password}" | base64 --decode) \
       --env=RABBITMQ_MAN_PORT=15672 \
-      -- /bin/bash -c "sleep 2; behave features --tags=~@local-docker --no-capture"
+      -- /bin/bash -c "sleep 2; behave features --tags=${TEST_SCENARIO} --no-capture"
