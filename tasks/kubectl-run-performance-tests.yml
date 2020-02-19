@@ -30,33 +30,35 @@ run:
 
       export TEST_SCENARIO=`gsutil cat gs://census-rm-performance-sample-files/target-scenario-tag.txt`
 
-      # THIS IS THE NEW PUBSUB PERFORMANCE TEST FANDANGO
-      kubectl scale deployment case-processor --replicas=0
+      # THIS IS THE PUBSUB PERFORMANCE TEST SECTION
+      if [ "$TEST_SCENARIO" == "\"@pubsub\"" ]; then
+        kubectl scale deployment case-processor --replicas=0
 
-      # Create an performance tests pod and run the performance tests in it
-      # Env vars have to passed one by one as a --env flag each
-      # The sleep is to give kubectl time to attach properly, otherwise the first few log lines are lost
-      set +x
-      kubectl run performance-tests -it --command --rm --quiet \
-      --generator=run-pod/v1 \
-      --image=${PERFORMANCE_TESTS_IMAGE} \
-      --restart=Never \
-      $(while read env; do echo --env=${env}; done < performance-tests-repo/kubernetes.env) \
-      --env=SFTP_HOST=$(kubectl get secret sftp-ssh-credentials -o=jsonpath="{.data.host}" | base64 --decode) \
-      --env=SFTP_USERNAME=$(kubectl get secret sftp-ssh-credentials -o=jsonpath="{.data.username}" | base64 --decode) \
-      --env=SFTP_KEY=$(kubectl get secret sftp-ssh-credentials -o=jsonpath="{.data.private-key}") \
-      --env=SFTP_PASSPHRASE=$(kubectl get secret sftp-ssh-credentials -o=jsonpath="{.data.passphrase}" | base64 --decode) \
-      --env=SFTP_PPO_DIRECTORY=$(kubectl get configmap project-config -o=jsonpath="{.data.sftp-ppo-supplier-directory}") \
-      --env=SFTP_QM_DIRECTORY=$(kubectl get configmap project-config -o=jsonpath="{.data.sftp-qm-supplier-directory}") \
-      --env=RABBITMQ_USER=$(kubectl get secret rabbitmq -o=jsonpath="{.data.rabbitmq-username}" | base64 --decode) \
-      --env=RABBITMQ_PASSWORD=$(kubectl get secret rabbitmq -o=jsonpath="{.data.rabbitmq-password}" | base64 --decode) \
-      --env=RABBITMQ_MAN_PORT=15672 \
-      --env=GOOGLE_SERVICE_ACCOUNT_JSON=$(kubectl get secret pubsub-credentials -o=jsonpath="{.data['service-account-key\.json']}") \
-      --env=GOOGLE_APPLICATION_CREDENTIALS="/home/performancetests/service-account-key.json" \
-      -- /bin/bash -c "sleep 2; behave pubsub_features --tags=${TEST_SCENARIO} --no-capture"
+        # Create an performance tests pod and run the performance tests in it
+        # Env vars have to passed one by one as a --env flag each
+        # The sleep is to give kubectl time to attach properly, otherwise the first few log lines are lost
+        set +x
+        kubectl run performance-tests -it --command --rm --quiet \
+        --generator=run-pod/v1 \
+        --image=${PERFORMANCE_TESTS_IMAGE} \
+        --restart=Never \
+        $(while read env; do echo --env=${env}; done < performance-tests-repo/kubernetes.env) \
+        --env=SFTP_HOST=$(kubectl get secret sftp-ssh-credentials -o=jsonpath="{.data.host}" | base64 --decode) \
+        --env=SFTP_USERNAME=$(kubectl get secret sftp-ssh-credentials -o=jsonpath="{.data.username}" | base64 --decode) \
+        --env=SFTP_KEY=$(kubectl get secret sftp-ssh-credentials -o=jsonpath="{.data.private-key}") \
+        --env=SFTP_PASSPHRASE=$(kubectl get secret sftp-ssh-credentials -o=jsonpath="{.data.passphrase}" | base64 --decode) \
+        --env=SFTP_PPO_DIRECTORY=$(kubectl get configmap project-config -o=jsonpath="{.data.sftp-ppo-supplier-directory}") \
+        --env=SFTP_QM_DIRECTORY=$(kubectl get configmap project-config -o=jsonpath="{.data.sftp-qm-supplier-directory}") \
+        --env=RABBITMQ_USER=$(kubectl get secret rabbitmq -o=jsonpath="{.data.rabbitmq-username}" | base64 --decode) \
+        --env=RABBITMQ_PASSWORD=$(kubectl get secret rabbitmq -o=jsonpath="{.data.rabbitmq-password}" | base64 --decode) \
+        --env=RABBITMQ_MAN_PORT=15672 \
+        --env=GOOGLE_SERVICE_ACCOUNT_JSON=$(kubectl get secret pubsub-credentials -o=jsonpath="{.data['service-account-key\.json']}") \
+        --env=GOOGLE_APPLICATION_CREDENTIALS="/home/performancetests/service-account-key.json" \
+        -- /bin/bash -c "sleep 2; behave pubsub_features --tags=${TEST_SCENARIO} --no-capture"
 
-      kubectl scale deployment case-processor --replicas=$CASE_PROCESSOR_REPLICAS
-      kubectl rollout status deploy case-processor --watch=true --timeout=200s
+        kubectl scale deployment case-processor --replicas=$CASE_PROCESSOR_REPLICAS
+        kubectl rollout status deploy case-processor --watch=true --timeout=200s
+      fi
 
       # Create an performance tests pod and run the performance tests in it
       # Env vars have to passed one by one as a --env flag each
