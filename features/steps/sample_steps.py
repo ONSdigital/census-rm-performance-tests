@@ -8,7 +8,7 @@ from behave import step
 from load_sample import load_sample_file
 
 from config import Config
-from features.environment import get_msg_count
+from utilties.rabbit_helper import wait_for_queue_to_be_drained, wait_for_messages_to_be_queued
 
 
 @step("the sample file has been loaded from the bucket")
@@ -49,8 +49,8 @@ def load_file(context, sample_file_name):
 def wait_for_full_sample_ingest(context):
     # Wait required to consistently work
     time.sleep(10)
-    _wait_for_queue_to_be_drained(Config.RABBITMQ_SAMPLE_INBOUND_QUEUE)
-    _wait_for_queue_to_be_drained(Config.RABBITMQ_SAMPLE_TO_ACTION_QUEUE)
+    wait_for_queue_to_be_drained(Config.RABBITMQ_SAMPLE_INBOUND_QUEUE)
+    wait_for_queue_to_be_drained(Config.RABBITMQ_SAMPLE_TO_ACTION_QUEUE)
     context.sample_fully_ingested_time = datetime.utcnow()
     time_taken = context.sample_fully_ingested_time - context.sample_load_start_time
     time_taken_metric = json.dumps({
@@ -62,9 +62,8 @@ def wait_for_full_sample_ingest(context):
     print(f'{time_taken_metric}\n')
 
 
-def _wait_for_queue_to_be_drained(queue_name):
-    while True:
-        if get_msg_count(queue_name) == 0:
-            return
-
-        time.sleep(1)
+@step("the sample file '{sample_file}' is loaded and '{message_count}' messages are queued on '{queue}'")
+def load_sample_and_check_queue(context, sample_file, message_count, queue):
+    context.message_count = int(message_count)
+    load_file(context, Config.PROJECT_PATH.joinpath('resources', 'sample_files', sample_file))
+    wait_for_messages_to_be_queued(queue, context.message_count)
