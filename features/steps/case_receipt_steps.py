@@ -11,12 +11,6 @@ from utilties.rabbit_helper import wait_for_queue_to_be_drained, start_listening
     store_all_msgs_in_context
 
 
-@step("the sample file has been fully ingested")
-def wait_for_sample_ingest(context):
-    time.sleep(10)
-    wait_for_queue_to_be_drained(Config.RABBITMQ_SAMPLE_INBOUND_QUEUE)
-
-
 @step("we gather a list of QIDs")
 def gather_qids(context):
     context.messages_received = []
