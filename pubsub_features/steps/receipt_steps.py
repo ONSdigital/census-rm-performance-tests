@@ -5,6 +5,7 @@ from datetime import datetime
 
 from behave import step
 from google.cloud import pubsub_v1
+from google.api_core.exceptions import GoogleAPIError
 
 from config import Config
 from features.environment import get_msg_count, _clear_down_queue
@@ -56,3 +57,47 @@ def wait_for_queue_to_reach_target(queue_name, target):
         time.sleep(1)
         if (datetime.utcnow() - loop_start_time).total_seconds() > 3600:
             assert "Pubsub messages not published within time limit"
+
+
+@step("a receipt is sent for every case loaded")
+def send_receipt_for_every_loaded_case(context):
+    _publish_object_finalize(context)
+
+
+def _publish_object_finalize(context, case_id="0", tx_id="3d14675d-a25d-4672-a0fe-b960586653e8",
+                             questionnaire_id="0"):
+    context.sent_to_gcp = False
+
+    publisher = pubsub_v1.PublisherClient()
+
+    topic_path = publisher.topic_path(Config.RECEIPT_TOPIC_PROJECT, Config.RECEIPT_TOPIC_ID)
+
+    data = json.dumps({
+        "timeCreated": "2008-08-24T00:00:00Z",
+        "metadata": {
+            "case_id": case_id,
+            "tx_id": tx_id,
+            "questionnaire_id": questionnaire_id,
+        }
+    })
+
+    future = publisher.publish(topic_path,
+                               data=data.encode('utf-8'),
+                               eventType='OBJECT_FINALIZE',
+                               bucketId='eq-bucket',
+                               objectId=tx_id)
+    if not future.done():
+        time.sleep(1)
+    try:
+        future.result(timeout=30)
+    except GoogleAPIError:
+        return
+
+    print(f'Message published to {topic_path}')
+
+    context.sent_to_gcp = True
+
+
+@step("a case updated event is emitted with receipted true for every case")
+def receipted_case_updated_event_emitted_for_each_case(context):
+    context.x = 'blah'

@@ -7,7 +7,7 @@ name = "pypi"
 structlog = "*"
 behave = "*"
 pika = "*"
-census-rm-sample-loader = {editable = true,git = "https://github.com/ONSdigital/census-rm-sample-loader",ref = "v1.0.0"}
+census-rm-sample-loader = {editable = true, git = "https://github.com/ONSdigital/census-rm-sample-loader", ref = "v1.0.1"}
 paramiko = "*"
 pgpy = "*"
 requests = "*"
