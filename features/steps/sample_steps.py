@@ -1,17 +1,14 @@
 import json
 import time
-import functools
-from google.cloud import storage
 from datetime import datetime
 from pathlib import Path
 
 from behave import step
+from google.cloud import storage
 from load_sample import load_sample_file
 
 from config import Config
 from features.environment import get_msg_count
-from utilties.rabbit_context import RabbitContext
-from utilties.test_case_helper import test_helper
 
 
 @step("the sample file has been loaded from the bucket")
@@ -72,23 +69,3 @@ def _wait_for_queue_to_be_drained(queue_name):
             return
 
         time.sleep(1)
-
-
-def start_listening_to_rabbit_queue(queue, on_message_callback, timeout=30):
-    rabbit = RabbitContext(queue_name=queue)
-    connection = rabbit.open_connection()
-
-    connection.call_later(
-        delay=timeout,
-        callback=functools.partial(_timeout_callback, rabbit))
-
-    rabbit.channel.basic_consume(
-        queue=queue,
-        on_message_callback=on_message_callback)
-    rabbit.channel.start_consuming()
-
-
-def _timeout_callback(rabbit):
-    print('Timed out waiting for messages')
-    rabbit.close_connection()
-    test_helper.fail("Didn't find the expected number of messages")
