@@ -66,4 +66,5 @@ def wait_for_full_sample_ingest(context):
 def load_sample_and_check_queue(context, sample_file, message_count, queue):
     context.message_count = int(message_count)
     load_file(context, Config.PROJECT_PATH.joinpath('resources', 'sample_files', sample_file))
+    wait_for_queue_to_be_drained(Config.RABBITMQ_SAMPLE_INBOUND_QUEUE)
     wait_for_messages_to_be_queued(queue, context.message_count)
