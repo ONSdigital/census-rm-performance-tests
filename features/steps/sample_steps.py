@@ -1,10 +1,10 @@
 import json
 import time
+from google.cloud import storage
 from datetime import datetime
 from pathlib import Path
 
 from behave import step
-from google.cloud import storage
 from load_sample import load_sample_file
 
 from config import Config
