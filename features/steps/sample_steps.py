@@ -39,6 +39,7 @@ def load_file(context, sample_file_name):
 
     load_sample_file(sample_file_name, context.action_plan_id,
                      context.action_plan_id,
+                     store_loaded_sample_units=False,
                      host=Config.RABBITMQ_HOST, port=Config.RABBITMQ_PORT,
                      vhost=Config.RABBITMQ_VHOST, exchange=Config.RABBITMQ_EXCHANGE,
                      user=Config.RABBITMQ_USER, password=Config.RABBITMQ_PASSWORD,
