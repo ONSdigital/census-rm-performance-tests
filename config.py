@@ -49,6 +49,9 @@ class Config:
     SAMPLE_BUCKET = os.getenv('SAMPLE_BUCKET', 'census-rm-performance-sample-files')
     THREE_MILLION_SAMPLE_FILE = os.getenv('THREE_MILLION_SAMPLE_FILE', '3_5_million_sample.csv')
 
+    CASE_RECEIPT_SAMPLE_FILE = Path(os.getenv('SAMPLE_FILE_PATH', PROJECT_PATH.joinpath('resources', 'sample_files',
+                                                                                        '10000_sample_file.csv')))
+
     PUBSUB_MESSAGE_QUANTITY = 5000
     CASE_RECEIPT_QUEUE_NAME = "Case.Responses"
     PUBSUB_PROJECT = os.getenv('PUBSUB_PROJECT', "census-rm-performance")
