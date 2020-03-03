@@ -9,13 +9,17 @@ logger = wrap_logger(logging.getLogger(__name__))
 
 
 def create_action_plan(action_plan_id):
-    logger.debug('Creating action plan')
+    # logger.debug('Creating action plan')
+    #
+    # url = f'{Config.ACTION_SERVICE}/actionPlans'
+    #
+    # body = {'id': action_plan_id}
+    #
+    # # response = requests.post(url, json=body)
 
-    url = f'{Config.ACTION_SERVICE}/actionPlans'
+    url = f'{Config.ACTION_SERVICE}/actionPlans/{action_plan_id}'
 
-    body = {'id': action_plan_id}
-
-    response = requests.post(url, json=body)
+    response = requests.get(url=url)
 
     response.raise_for_status()
 

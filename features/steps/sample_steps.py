@@ -25,7 +25,7 @@ def load_bucket_sample_file(context):
 
     print(f'downloaded file {Config.THREE_MILLION_SAMPLE_FILE} from gcp bucket {Config.SAMPLE_BUCKET}, now loading')
 
-    load_file(context, Path(context.sample_file))
+    # load_file(context, Path(context.sample_file))
 
 
 @step("the sample file has been loaded")

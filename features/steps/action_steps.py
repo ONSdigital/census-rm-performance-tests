@@ -9,6 +9,8 @@ from controllers.action_controller import create_action_plan, create_action_rule
 
 @step("all initial contact action rules are scheduled for now")
 def setup_action_plan_and_rules(context):
+    context.action_plan_id = 'a2656051-2fef-47e6-8a86-2c8521535bbf'
+    context.sample_file = 'sample_file_from_bucket.csv'
     action_plan_url = setup_action_plan(context.action_plan_id)
     setup_action_rules(context, action_plan_url)
 
@@ -32,7 +34,9 @@ def get_expected_line_counts(sample_file_path, classifiers_for_action_type):
     with open(sample_file_path) as sample_file:
         reader = csv.DictReader(sample_file)
         for row in reader:
-            expected_line_counts[treatment_code_to_action_type[row['TREATMENT_CODE']]] += 1
+            action_type = treatment_code_to_action_type.get(row['TREATMENT_CODE'])
+            if action_type:
+                expected_line_counts[action_type] += 1
 
     # TODO nicer way to print within behave
     print(f'Expected line counts for each action type: {expected_line_counts}\n')
