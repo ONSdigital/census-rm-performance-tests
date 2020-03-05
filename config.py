@@ -35,7 +35,6 @@ class Config:
     SFTP_PPO_DIRECTORY = os.getenv('SFTP_PPO_DIRECTORY', 'ppo_dev/print_services/')
     SFTP_QM_DIRECTORY = os.getenv('SFTP_QM_DIRECTORY', 'qmprint_dev/print_services/')
     SFTP_POLLING_DELAY_SECONDS = os.getenv('SFTP_POLLING_DELAY_SECONDS', 1)
-    SFTP_POLLING_TIMEOUT_HOURS = os.getenv('SFTP_POLLING_DELAY_SECONDS', 24)
 
     DECRYPTION_KEY_PATH = Path(os.getenv('DECRYPTION_KEY_PATH',
                                          PROJECT_PATH.joinpath('resources', 'dummy_keys', 'our_dummy_private.asc')))

@@ -30,8 +30,9 @@ def update_actual_line_counts(print_file_sftp_paths, sftp, context):
             context.actual_line_counts[PACK_CODE_TO_ACTION_TYPE[pack_code]] += len(decrypted_print_file.splitlines())
 
 
-@step('all the initial contact print files are produced on the SFTP containing the correct total number of cases')
-def wait_for_print_files(context):
+@step('all the initial contact print files are produced on the SFTP containing the correct total number of cases within {timeout} hours')
+@step('all the initial contact print files are produced on the SFTP containing the correct total number of cases within {timeout} hour')
+def wait_for_print_files(context, timeout):
     timeout_start = datetime.utcnow()
     context.actual_line_counts = {action_type: 0 for action_type in context.expected_line_counts.keys()}
     context.counted_print_files = set()
@@ -53,7 +54,7 @@ def wait_for_print_files(context):
                 })
                 print(f'{time_taken_metric}\n')
                 break
-            if datetime.utcnow() - timeout_start >= timedelta(hours=Config.SFTP_POLLING_TIMEOUT_HOURS):
+            if datetime.utcnow() - timeout_start >= timedelta(hours=timeout):
                 assert False, (f"Timed out waiting for print files after {Config.SFTP_POLLING_TIMEOUT_HOURS} hours,"
                                f" actual_line_counts: {context.actual_line_counts}")
         sleep(int(Config.SFTP_POLLING_DELAY_SECONDS))
