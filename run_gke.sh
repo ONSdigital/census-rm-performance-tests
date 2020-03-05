@@ -40,7 +40,7 @@ fi
 echo "Running Census RM Performance Tests [`kubectl config current-context`]..."
 
 
-kubectl run performance-tests -i --attach=false --quiet --generator=run-pod/v1 \
+kubectl run performance-tests -it --command --rm --quiet --generator=run-pod/v1 \
     --image=$IMAGE --restart=Never \
     $(while read env; do echo --env=${env}; done < kubernetes.env) \
     --env=SFTP_HOST=$(kubectl get secret sftp-ssh-credentials -o=jsonpath="{.data.host}" | base64 --decode) \
@@ -53,6 +53,6 @@ kubectl run performance-tests -i --attach=false --quiet --generator=run-pod/v1 \
     --env=RABBITMQ_PASSWORD=$(kubectl get secret rabbitmq -o=jsonpath="{.data.rabbitmq-password}" | base64 --decode) \
     --env=RABBITMQ_MAN_PORT=15672 \
     --env=SAMPLE_FILE_PATH=resources/sample_files/1_per_treatment_code.csv \
-    --env=SAMPLE_BUCKET=census-rm-performance-spike-sample-files \
-    --env=THREE_MILLION_SAMPLE_FILE=30_million_sample.csv
-#    -- /bin/bash -c "sleep 2; behave --no-capture"
+    --env=SAMPLE_BUCKET=census-rm-performance-sample-files \
+    --env=THREE_MILLION_SAMPLE_FILE=3_5_million_sample.csv \
+    -- /bin/bash -c "sleep 2; behave --no-capture"
