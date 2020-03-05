@@ -1,34 +1,34 @@
 import json
 import time
-from google.cloud import storage
 from datetime import datetime
 from pathlib import Path
 
 from behave import step
+from google.cloud import storage
 from load_sample import load_sample_file
 
 from config import Config
 from utilties.rabbit_helper import wait_for_queue_to_be_drained, wait_for_messages_to_be_queued
 
 
-@step("the sample file has been loaded from the bucket")
-def load_bucket_sample_file(context):
+@step('the sample file "{sample_file}" has been loaded from the bucket')
+def load_bucket_sample_file(context, sample_file):
     client = storage.Client()
 
     bucket = client.get_bucket(Config.SAMPLE_BUCKET)
-    blob = storage.Blob(Config.THREE_MILLION_SAMPLE_FILE, bucket)
+    blob = storage.Blob(sample_file, bucket)
 
     context.sample_file = 'sample_file_from_bucket.csv'
 
     with open(context.sample_file, 'wb+') as file_obj:
         client.download_blob_to_file(blob, file_obj)
 
-    print(f'downloaded file {Config.THREE_MILLION_SAMPLE_FILE} from gcp bucket {Config.SAMPLE_BUCKET}, now loading')
+    print(f'downloaded file {sample_file} from gcp bucket {Config.SAMPLE_BUCKET}, now loading')
 
-    # load_file(context, Path(context.sample_file))
+    load_file(context, Path(context.sample_file))
 
 
-@step("the sample file has been loaded")
+@step("the 350,000 unit sample file has been loaded")
 def load_sample(context):
     context.sample_file = Config.SAMPLE_FILE_PATH
     load_file(context, Path(Config.SAMPLE_FILE_PATH))

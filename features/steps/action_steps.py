@@ -9,8 +9,6 @@ from controllers.action_controller import create_action_plan, create_action_rule
 
 @step("all initial contact action rules are scheduled for now")
 def setup_action_plan_and_rules(context):
-    context.action_plan_id = 'a2656051-2fef-47e6-8a86-2c8521535bbf'
-    context.sample_file = 'sample_file_from_bucket.csv'
     action_plan_url = setup_action_plan(context.action_plan_id)
     setup_action_rules(context, action_plan_url)
 

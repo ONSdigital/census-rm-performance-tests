@@ -7,20 +7,44 @@ from behave import step
 
 from config import Config
 from utilties.decrypt import decrypt_message
-from utilties.mappings import PACK_CODE_TO_SFTP_DIRECTORY, PACK_CODE_TO_ACTION_TYPE
+from utilties.mappings import PACK_CODE_TO_ACTION_TYPE
 from utilties.sftp_utility import SftpUtility
 
 
-# timeout in concourse to stop it going on forever
-@step('all the initial contact print files are produced on the SFTP')
+def get_pack_code_from_print_file_name(print_file_name):
+    for pack_code in PACK_CODE_TO_ACTION_TYPE.keys():
+        if print_file_name.startswith(pack_code):
+            return pack_code
+
+
+def update_actual_line_counts(print_file_sftp_paths, sftp, context):
+    for print_file_sftp_path in print_file_sftp_paths:
+        if print_file_sftp_path not in context.counted_print_files:
+            context.counted_print_files.add(print_file_sftp_path)
+            pack_code = get_pack_code_from_print_file_name(print_file_sftp_path.name)
+
+            with sftp.sftp_client.open(str(print_file_sftp_path)) as print_file:
+                decrypted_print_file = decrypt_message(print_file.read(),
+                                                       private_key_file_path=Config.DECRYPTION_KEY_PATH,
+                                                       private_key_passphrase=Config.DECRYPTION_KEY_PASSPHRASE)
+            context.actual_line_counts[PACK_CODE_TO_ACTION_TYPE[pack_code]] += len(decrypted_print_file.splitlines())
+
+
+@step('all the initial contact print files are produced on the SFTP containing the correct total number of cases')
 def wait_for_print_files(context):
+    timeout_start = datetime.utcnow()
+    context.actual_line_counts = {action_type: 0 for action_type in context.expected_line_counts.keys()}
+    context.counted_print_files = set()
     with SftpUtility() as sftp:
         while True:
             context.all_initial_print_sftp_paths = fetch_all_print_files_paths(sftp, context)
-            if context.all_initial_print_sftp_paths:
-                context.produced_print_file_time = datetime.utcnow()
+            context.produced_print_file_time = datetime.utcnow()
+            print_file_sftp_paths = [print_file_path for print_file_path in context.all_initial_print_sftp_paths
+                                     if print_file_path.name.endswith('.csv.gpg')]
+            update_actual_line_counts(print_file_sftp_paths, sftp, context)
+            if context.expected_line_counts == context.actual_line_counts:
                 context.print_file_production_run_time = context.produced_print_file_time \
-                    - context.action_rule_trigger_time
+                                                         - context.action_rule_trigger_time
                 time_taken_metric = json.dumps({
                     'event_description': 'Time from action rule trigger to all print files produced',
                     'event_type': 'ACTION_RULE_TO_PRINT',
@@ -29,44 +53,18 @@ def wait_for_print_files(context):
                 })
                 print(f'{time_taken_metric}\n')
                 break
-
-        sleep(int(Config.SFTP_POLLING_DELAY))
+            if datetime.utcnow() - timeout_start >= timedelta(hours=Config.SFTP_POLLING_TIMEOUT_HOURS):
+                assert False, (f"Timed out waiting for print files after {Config.SFTP_POLLING_TIMEOUT_HOURS} hours,"
+                               f" actual_line_counts: {context.actual_line_counts}")
+        sleep(int(Config.SFTP_POLLING_DELAY_SECONDS))
 
 
 def fetch_all_print_files_paths(sftp, context):
-    print_file_paths = []
-    print_file_paths.extend([Path(Config.SFTP_QM_DIRECTORY).joinpath(str(file_name.filename)) for file_name in
-                             sftp.get_all_print_files(Config.SFTP_QM_DIRECTORY, context.test_start_local_datetime)])
+    print_file_paths = [Path(Config.SFTP_QM_DIRECTORY).joinpath(str(file_name.filename)) for file_name in
+                        sftp.get_all_print_files(Config.SFTP_QM_DIRECTORY, context.test_start_local_datetime)]
     print_file_paths.extend([Path(Config.SFTP_PPO_DIRECTORY).joinpath(str(file_name.filename)) for file_name in
                              sftp.get_all_print_files(Config.SFTP_PPO_DIRECTORY, context.test_start_local_datetime)])
-
-    for pack_code in PACK_CODE_TO_SFTP_DIRECTORY.keys():
-        matching_csv_files = [print_file_path for print_file_path in print_file_paths
-                              if print_file_path.name.startswith(pack_code)
-                              and print_file_path.name.endswith('.csv.gpg')]
-        matching_manifest_files = [print_file_path for print_file_path in print_file_paths
-                                   if print_file_path.name.startswith(pack_code)
-                                   and print_file_path.name.endswith('.manifest')]
-        if len(matching_csv_files) != 1 and len(matching_manifest_files) != 1:
-            return []
     return print_file_paths
-
-
-@step('they all have the correct line count')
-def print_file_line_count(context):
-    print_file_paths = [file_path for file_path in context.all_initial_print_sftp_paths
-                        if file_path.name.endswith('.csv.gpg')]
-    with SftpUtility() as sftp:
-        for print_file_path in print_file_paths:
-            with sftp.sftp_client.open(str(print_file_path)) as initial_contact_print_file:
-                decrypted_print_file = decrypt_message(initial_contact_print_file.read(),
-                                                       private_key_file_path=Config.DECRYPTION_KEY_PATH,
-                                                       private_key_passphrase=Config.DECRYPTION_KEY_PASSPHRASE)
-
-        pack_code = '_'.join(print_file_path.name.split('_')[0:3])
-
-        assert context.expected_line_counts[PACK_CODE_TO_ACTION_TYPE[pack_code]] == len(
-            decrypted_print_file.splitlines()), f'The file {print_file_path.name} file has an incorrect number of lines'
 
 
 @step('they are produced within the configured time limit')

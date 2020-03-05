@@ -23,7 +23,7 @@ def before_scenario(context, scenario):
 
     context.test_start_local_datetime = datetime.now()
     context.action_plan_id = str(uuid.uuid4())
-    # _clear_down_all_queues()
+    _clear_down_all_queues()
 
 
 def get_msg_count(queue_name):
