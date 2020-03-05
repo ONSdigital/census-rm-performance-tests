@@ -30,8 +30,10 @@ def update_actual_line_counts(print_file_sftp_paths, sftp, context):
             context.actual_line_counts[PACK_CODE_TO_ACTION_TYPE[pack_code]] += len(decrypted_print_file.splitlines())
 
 
-@step('all the initial contact print files are produced on the SFTP containing the correct total number of cases within {timeout} hours')
-@step('all the initial contact print files are produced on the SFTP containing the correct total number of cases within {timeout} hour')
+@step('all the initial contact print files are produced on the SFTP '
+      'containing the correct total number of cases within {timeout} hours')
+@step('all the initial contact print files are produced on the SFTP '
+      'containing the correct total number of cases within {timeout} hour')
 def wait_for_print_files(context, timeout):
     timeout_start = datetime.utcnow()
     context.actual_line_counts = {action_type: 0 for action_type in context.expected_line_counts.keys()}
