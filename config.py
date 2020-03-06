@@ -34,7 +34,7 @@ class Config:
     SFTP_PASSPHRASE = os.getenv('SFTP_PASSPHRASE', 'secret')
     SFTP_PPO_DIRECTORY = os.getenv('SFTP_PPO_DIRECTORY', 'ppo_dev/print_services/')
     SFTP_QM_DIRECTORY = os.getenv('SFTP_QM_DIRECTORY', 'qmprint_dev/print_services/')
-    SFTP_POLLING_DELAY = os.getenv('SFTP_POLLING_DELAY', 1)
+    SFTP_POLLING_DELAY_SECONDS = os.getenv('SFTP_POLLING_DELAY_SECONDS', 1)
 
     DECRYPTION_KEY_PATH = Path(os.getenv('DECRYPTION_KEY_PATH',
                                          PROJECT_PATH.joinpath('resources', 'dummy_keys', 'our_dummy_private.asc')))
@@ -47,7 +47,6 @@ class Config:
                                                                                 '100_per_treatment_code.csv')))
 
     SAMPLE_BUCKET = os.getenv('SAMPLE_BUCKET', 'census-rm-performance-sample-files')
-    THREE_MILLION_SAMPLE_FILE = os.getenv('THREE_MILLION_SAMPLE_FILE', '3_5_million_sample.csv')
 
     CASE_RECEIPT_SAMPLE_FILE = Path(os.getenv('SAMPLE_FILE_PATH', PROJECT_PATH.joinpath('resources', 'sample_files',
                                                                                         '10000_sample_file.csv')))

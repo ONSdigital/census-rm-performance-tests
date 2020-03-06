@@ -32,7 +32,9 @@ def get_expected_line_counts(sample_file_path, classifiers_for_action_type):
     with open(sample_file_path) as sample_file:
         reader = csv.DictReader(sample_file)
         for row in reader:
-            expected_line_counts[treatment_code_to_action_type[row['TREATMENT_CODE']]] += 1
+            action_type = treatment_code_to_action_type.get(row['TREATMENT_CODE'])
+            if action_type:
+                expected_line_counts[action_type] += 1
 
     # TODO nicer way to print within behave
     print(f'Expected line counts for each action type: {expected_line_counts}\n')
