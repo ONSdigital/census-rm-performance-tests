@@ -56,8 +56,8 @@ def wait_for_print_files(context, timeout):
                 })
                 print(f'{time_taken_metric}\n')
                 break
-            if datetime.utcnow() - timeout_start >= timedelta(hours=timeout):
-                assert False, (f"Timed out waiting for print files after {Config.SFTP_POLLING_TIMEOUT_HOURS} hours,"
+            if datetime.utcnow() - timeout_start >= timedelta(hours=int(timeout)):
+                assert False, (f"Timed out waiting for print files after {timeout} hours,"
                                f" actual_line_counts: {context.actual_line_counts}")
         sleep(int(Config.SFTP_POLLING_DELAY_SECONDS))
 
