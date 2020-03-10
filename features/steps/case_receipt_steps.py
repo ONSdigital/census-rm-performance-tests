@@ -42,7 +42,7 @@ def case_processor_receipt_test(context):
         'event_type': 'CASE_PROCESSOR_RECEIPT_PERFORMANCE',
         'time_in_seconds': str(test_complete_time.total_seconds()),
         'time_taken': str(test_complete_time),
-        'scenario_label': context.scenario_tag
+        'scenario_tag': context.scenario_tag
     })
     print(f'{time_taken_metric}\n')
 

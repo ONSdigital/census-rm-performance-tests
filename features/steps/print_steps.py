@@ -53,7 +53,7 @@ def wait_for_print_files(context, timeout):
                     'event_type': 'ACTION_RULE_TO_PRINT',
                     'time_in_seconds': str(context.print_file_production_run_time.total_seconds()),
                     'time_taken': str(context.print_file_production_run_time),
-                        'scenario_label': context.scenario_tag
+                    'scenario_tag': context.scenario_tag
                 })
                 print(f'{time_taken_metric}\n')
                 break

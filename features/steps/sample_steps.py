@@ -59,7 +59,7 @@ def wait_for_full_sample_ingest(context):
         'event_type': 'SAMPLE_INGEST_TO_ACTION_CASES',
         'time_in_seconds': str(time_taken.total_seconds()),
         'time_taken': str(time_taken),
-        'scenario_label': context.scenario_tag
+        'scenario_tag': context.scenario_tag
     })
     print(f'{time_taken_metric}\n')
 
