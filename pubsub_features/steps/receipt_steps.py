@@ -39,7 +39,8 @@ def receipt_performance_test(context):
         'event_description': f'Time for pubsub service to process {test_quantity} Google Pubsub messages',
         'event_type': 'PUBSUB_PERFORMANCE',
         'time_in_seconds': str(test_complete_time.total_seconds()),
-        'time_taken': str(test_complete_time)
+        'time_taken': str(test_complete_time),
+        'scenario_label': context.scenario_tag
     })
     print(f'{time_taken_metric}\n')
 

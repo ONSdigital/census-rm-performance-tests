@@ -71,8 +71,6 @@ This test is continuous so you need to 'CTRL C' to stop it.
 tests/basic-test.sh
 ```
 
-If you want to skip a scenario mark it @skip
-
 For documentation on running tests:
 
 https://rabbitmq.github.io/rabbitmq-perf-test/stable/htmlsingle/

@@ -17,10 +17,8 @@ def before_all(_):
 
 
 def before_scenario(context, scenario):
-    if "skip" in scenario.effective_tags:
-        scenario.skip("Marked with @skip")
-        return
-
+    assert len(scenario.effective_tags) == 1, 'Unexpected scenario tags'
+    context.scenario_tag = scenario.effective_tags[0]
     context.test_start_local_datetime = datetime.now()
     context.action_plan_id = str(uuid.uuid4())
     _clear_down_all_queues()

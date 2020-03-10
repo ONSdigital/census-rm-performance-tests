@@ -8,6 +8,11 @@ def before_all(_context):
     _setup_google_auth()
 
 
+def before_scenario(context, scenario):
+    assert len(scenario.effective_tags) == 1, 'Unexpected scenario tags'
+    context.scenario_tag = scenario.effective_tags[0]
+
+
 def _setup_google_auth():
     if Config.GOOGLE_SERVICE_ACCOUNT_JSON and Config.GOOGLE_APPLICATION_CREDENTIALS:
         sa_json = json.loads(base64.b64decode(Config.GOOGLE_SERVICE_ACCOUNT_JSON))

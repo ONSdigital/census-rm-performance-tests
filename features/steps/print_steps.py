@@ -52,7 +52,8 @@ def wait_for_print_files(context, timeout):
                     'event_description': 'Time from action rule trigger to all print files produced',
                     'event_type': 'ACTION_RULE_TO_PRINT',
                     'time_in_seconds': str(context.print_file_production_run_time.total_seconds()),
-                    'time_taken': str(context.print_file_production_run_time)
+                    'time_taken': str(context.print_file_production_run_time),
+                        'scenario_label': context.scenario_tag
                 })
                 print(f'{time_taken_metric}\n')
                 break
@@ -70,16 +71,8 @@ def fetch_all_print_files_paths(sftp, context):
     return print_file_paths
 
 
-@step('they are produced within the configured time limit')
-def print_files_produced_within_time_limit(context):
-    assert context.print_file_production_run_time < timedelta(minutes=Config.PRINT_FILE_TIME_LIMIT_MINUTES), (
-        f'Print file production exceeded time limit: '
-        f'limit = [{timedelta(minutes=Config.PRINT_FILE_TIME_LIMIT_MINUTES)}], '
-        f'actual = [{context.print_file_production_run_time}]')
-
-
 @step("they are produced within the time limit {time_limit_minutes} minutes")
-def print_file_producted_in_minutes(context, time_limit_minutes):
+def print_file_produced_within_time_limit(context, time_limit_minutes):
     assert context.print_file_production_run_time < timedelta(minutes=int(time_limit_minutes)), (
         f'Print file production exceeded time limit: '
         f'limit = [{timedelta(minutes=time_limit_minutes)}], '
