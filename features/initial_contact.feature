@@ -6,7 +6,7 @@ Feature: RM produces all initial contact print files within a time window
     And the sample has been fully ingested into action scheduler database
     When all initial contact action rules are scheduled for now
     Then all the initial contact print files are produced on the SFTP containing the correct total number of cases within 1 hour
-    And they are produced within the configured time limit
+    And they are produced within the time limit 30 minutes
 
   @three-and-a-half-million
   Scenario: 3.5 Million Sample load through to initial contact print file production
