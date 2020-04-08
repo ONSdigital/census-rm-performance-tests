@@ -59,6 +59,7 @@ def _create_receipt_msg(qid):
         "payload": {
             "response": {
                 "questionnaireId": qid,
+                "unreceipt": "false"
             }
         }
     })
