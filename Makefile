@@ -8,7 +8,8 @@ lint:
 	pipenv run flake8
 
 check:
-	pipenv check
+	# TODO reinstate this once https://github.com/pypa/pipenv/issues/4188 is resolved
+	#pipenv check
 
 test: lint check performance-test
 
