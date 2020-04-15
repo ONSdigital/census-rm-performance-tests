@@ -43,7 +43,8 @@ def load_file(context, sample_file_name):
                      host=Config.RABBITMQ_HOST, port=Config.RABBITMQ_PORT,
                      vhost=Config.RABBITMQ_VHOST, exchange=Config.RABBITMQ_EXCHANGE,
                      user=Config.RABBITMQ_USER, password=Config.RABBITMQ_PASSWORD,
-                     queue_name=Config.RABBITMQ_SAMPLE_INBOUND_QUEUE)
+                     queue_name=Config.RABBITMQ_SAMPLE_INBOUND_QUEUE,
+                     sample_unit_log_frequency=Config.SAMPLE_LOAD_LOG_FREQUENCY)
 
 
 @step("the sample has been fully ingested into action scheduler database")

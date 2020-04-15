@@ -3,27 +3,28 @@ import json
 import logging
 import time
 
+from structlog import wrap_logger
+
 from features.environment import get_msg_count
 from utilties.rabbit_context import RabbitContext
-
-from structlog import wrap_logger
 
 logger = wrap_logger(logging.getLogger(__name__))
 
 
 def wait_for_queue_to_be_drained(queue_name):
-    while True:
-        if get_msg_count(queue_name) == 0:
-            return
-
+    attempts = 0
+    logger.info(f"Waiting for queue '{queue_name}' to be drained")
+    while get_msg_count(queue_name) != 0:
         time.sleep(1)
+        attempts += 1
+        if not attempts % 200:
+            logger.info(f"Still waiting for queue '{queue_name}' to be drained")
+    logger.info(f"Queue '{queue_name}' has been drained")
 
 
 def wait_for_messages_to_be_queued(queue_name, message_count):
     while get_msg_count(queue_name) < message_count:
         time.sleep(1)
-
-    return
 
 
 def start_listening_to_rabbit_queue(queue, on_message_callback, timeout=30):

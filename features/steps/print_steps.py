@@ -1,14 +1,18 @@
 import json
+import logging
 from datetime import datetime, timedelta
 from pathlib import Path
 from time import sleep
 
 from behave import step
+from structlog import wrap_logger
 
 from config import Config
 from utilties.decrypt import decrypt_message
 from utilties.mappings import PACK_CODE_TO_ACTION_TYPE
 from utilties.sftp_utility import SftpUtility
+
+logger = wrap_logger(logging.getLogger(__name__))
 
 
 def get_pack_code_from_print_file_name(print_file_name):
@@ -38,6 +42,8 @@ def wait_for_print_files(context, timeout):
     timeout_start = datetime.utcnow()
     context.actual_line_counts = {action_type: 0 for action_type in context.expected_line_counts.keys()}
     context.counted_print_files = set()
+    attempts = 0
+    logger.info('Waiting for print files')
     with SftpUtility() as sftp:
         while True:
             context.all_initial_print_sftp_paths = fetch_all_print_files_paths(sftp, context)
@@ -46,6 +52,7 @@ def wait_for_print_files(context, timeout):
                                      if print_file_path.name.endswith('.csv.gpg')]
             update_actual_line_counts(print_file_sftp_paths, sftp, context)
             if context.expected_line_counts == context.actual_line_counts:
+                logger.info('All print files found')
                 context.print_file_production_run_time = context.produced_print_file_time \
                                                          - context.action_rule_trigger_time
                 time_taken_metric = json.dumps({
@@ -61,6 +68,9 @@ def wait_for_print_files(context, timeout):
                 assert False, (f"Timed out waiting for print files after {timeout} hours,"
                                f" actual_line_counts: {context.actual_line_counts}")
         sleep(int(Config.SFTP_POLLING_DELAY_SECONDS))
+        attempts += 1
+        if not attempts % 200:
+            logger.info('Still waiting for print files')
 
 
 def fetch_all_print_files_paths(sftp, context):

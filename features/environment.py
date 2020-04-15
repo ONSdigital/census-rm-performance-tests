@@ -11,10 +11,9 @@ from utilties.rabbit_context import RabbitContext
 
 
 def before_all(_):
+    logging.basicConfig(level=Config.LOG_LEVEL)
     logging.getLogger('pika').setLevel('ERROR')
     logging.getLogger('paramiko').setLevel('ERROR')
-    logging.getLogger('load_sample').setLevel(logging.INFO)
-    logging.getLogger('load_sample').addHandler(logging.StreamHandler())
     logging.captureWarnings(True)
 
 

@@ -7,7 +7,7 @@ name = "pypi"
 structlog = "*"
 behave = "*"
 pika = "*"
-census-rm-sample-loader = {editable = true,git = "https://github.com/ONSdigital/census-rm-sample-loader",ref = "v2.0.0"}
+census-rm-sample-loader = {editable = true,git = "https://github.com/ONSdigital/census-rm-sample-loader",ref = "make-log-frequency-configurable"} # TODO replace with release version
 paramiko = "*"
 pgpy = "*"
 requests = "*"
