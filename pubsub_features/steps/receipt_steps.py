@@ -7,7 +7,7 @@ from behave import step
 from google.cloud import pubsub_v1
 
 from config import Config
-from features.environment import get_msg_count, _clear_down_queue
+from features.environment import get_message_count, _clear_down_queue
 
 
 @step("we can receipt the cases at an acceptable rate")
@@ -53,7 +53,7 @@ def publish_message(publisher, json_message, topic_path):
 
 def wait_for_queue_to_reach_target(queue_name, target):
     loop_start_time = datetime.utcnow()
-    while get_msg_count(queue_name) < target:
+    while get_message_count(queue_name) < target:
         time.sleep(1)
         if (datetime.utcnow() - loop_start_time).total_seconds() > 3600:
             assert "Pubsub messages not published within time limit"
