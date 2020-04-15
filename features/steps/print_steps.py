@@ -69,7 +69,7 @@ def wait_for_print_files(context, timeout):
                                f" actual_line_counts: {context.actual_line_counts}")
         sleep(int(Config.SFTP_POLLING_DELAY_SECONDS))
         attempts += 1
-        if not attempts % 200:
+        if not attempts % 300:
             logger.info('Still waiting for print files')
 
 

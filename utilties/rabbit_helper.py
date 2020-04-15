@@ -17,7 +17,7 @@ def wait_for_queue_to_be_drained(queue_name):
     while get_msg_count(queue_name) != 0:
         time.sleep(1)
         attempts += 1
-        if not attempts % 200:
+        if not attempts % 300:
             logger.info(f"Still waiting for queue '{queue_name}' to be drained")
     logger.info(f"Queue '{queue_name}' has been drained")
 
