@@ -11,10 +11,9 @@ from utilties.rabbit_context import RabbitContext
 
 
 def before_all(_):
+    logging.basicConfig(level=Config.LOG_LEVEL)
     logging.getLogger('pika').setLevel('ERROR')
     logging.getLogger('paramiko').setLevel('ERROR')
-    logging.getLogger('load_sample').setLevel(logging.INFO)
-    logging.getLogger('load_sample').addHandler(logging.StreamHandler())
     logging.captureWarnings(True)
 
 
@@ -26,7 +25,7 @@ def before_scenario(context, scenario):
     _clear_down_all_queues()
 
 
-def get_msg_count(queue_name):
+def get_message_count(queue_name):
     uri = f'http://{Config.RABBITMQ_HOST}:{Config.RABBITMQ_MAN_PORT}/api/queues/%2f/{queue_name}'
     response = requests.get(uri, auth=(Config.RABBITMQ_USER, Config.RABBITMQ_PASSWORD))
     response.raise_for_status()
@@ -70,7 +69,7 @@ def _clear_down_queue(queue_name):
             print(f'Failed with {response.status_code} retry attempt {failed_attempts}')
             time.sleep(10)
 
-        if get_msg_count(queue_name) == 0:
+        if get_message_count(queue_name) == 0:
             return
 
         time.sleep(1)

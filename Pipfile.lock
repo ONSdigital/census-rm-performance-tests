@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "c278db310b09f08c674f80cd759f147ed2101bae43eead04324fecc8ae43fc17"
+            "sha256": "f497e62df5f83452c7ca98e5197ab6009df7ecb23ea86864b526cba124fc7d3c"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -49,15 +49,15 @@
         },
         "cachetools": {
             "hashes": [
-                "sha256:9a52dd97a85f257f4e4127f15818e71a0c7899f121b34591fcc1173ea79a0198",
-                "sha256:b304586d357c43221856be51d73387f93e2a961598a9b6b6670664746f3b6c6c"
+                "sha256:1d057645db16ca7fe1f3bd953558897603d6f0b9c51ed9d11eb4d071ec4e2aab",
+                "sha256:de5d88f87781602201cde465d3afe837546663b168e8b39df67411b0bf10cefc"
             ],
-            "version": "==4.0.0"
+            "version": "==4.1.0"
         },
         "census-rm-sample-loader": {
             "editable": true,
             "git": "https://github.com/ONSdigital/census-rm-sample-loader",
-            "ref": "d781153683347c1303973447b6b2383d4cc85c4a"
+            "ref": "5c56af6bb1603e43837ed39ffce459693563cf92"
         },
         "certifi": {
             "hashes": [
@@ -135,17 +135,17 @@
                 "grpc"
             ],
             "hashes": [
-                "sha256:859f7392676761f2b160c6ee030c3422135ada4458f0948c5690a6a7c8d86294",
-                "sha256:92e962a087f1c4b8d1c5c88ade1c1dfd550047dcffb320c57ef6a534a20403e2"
+                "sha256:c0e430658ed6be902d7ba7095fb0a9cac810270d71bf7ac4484e76c300407aae",
+                "sha256:e4082a0b479dc2dee2f8d7b80ea8b5d0184885b773caab15ab1836277a01d689"
             ],
-            "version": "==1.16.0"
+            "version": "==1.17.0"
         },
         "google-auth": {
             "hashes": [
-                "sha256:a5ee4c40fef77ea756cf2f1c0adcf475ecb53af6700cf9c133354cdc9b267148",
-                "sha256:cab6c707e6ee20e567e348168a5c69dc6480384f777a9e5159f4299ad177dcc0"
+                "sha256:050f1713142fa57d4b34f4fd4a998210e330f6a29c84c6ce359b928cc11dc8ad",
+                "sha256:9813eaae335c45e8a1b5d274610fa961ac8aa650568d1cfb005b2c07da6bde6c"
             ],
-            "version": "==1.13.1"
+            "version": "==1.14.0"
         },
         "google-cloud-core": {
             "hashes": [

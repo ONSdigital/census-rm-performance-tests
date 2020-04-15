@@ -78,4 +78,5 @@ run:
       --env=RABBITMQ_USER=$(kubectl get secret rabbitmq -o=jsonpath="{.data.rabbitmq-username}" | base64 --decode) \
       --env=RABBITMQ_PASSWORD=$(kubectl get secret rabbitmq -o=jsonpath="{.data.rabbitmq-password}" | base64 --decode) \
       --env=RABBITMQ_MAN_PORT=15672 \
+      --env=LOG_LEVEL=INFO \
       -- /bin/bash -c "sleep 2; behave features --tags=${TEST_SCENARIO} --no-capture --no-logcapture"

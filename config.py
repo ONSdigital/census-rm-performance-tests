@@ -1,3 +1,4 @@
+import logging
 import os
 from pathlib import Path
 
@@ -5,6 +6,9 @@ from pathlib import Path
 class Config:
     PROJECT_PATH = Path(__file__).parent
     PROTOCOL = os.getenv('PROTOCOL', 'http')
+
+    LOG_LEVEL = os.getenv('LOG_LEVEL', logging.ERROR)
+    SAMPLE_LOAD_LOG_FREQUENCY = int(os.getenv('SAMPLE_LOAD_LOG_FREQUENCY', 100000))
 
     ACTION_SERVICE_HOST = os.getenv('ACTION_SERVICE_HOST', 'localhost')
     ACTION_SERVICE_PORT = os.getenv('ACTION_SERVICE_PORT', '8301')
