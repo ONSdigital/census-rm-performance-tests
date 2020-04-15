@@ -53,8 +53,8 @@ def wait_for_print_files(context, timeout):
             update_actual_line_counts(print_file_sftp_paths, sftp, context)
             if context.expected_line_counts == context.actual_line_counts:
                 logger.info('All print files found')
-                context.print_file_production_run_time = context.produced_print_file_time \
-                                                         - context.action_rule_trigger_time
+                context.print_file_production_run_time = (context.produced_print_file_time
+                                                          - context.action_rule_trigger_time)
                 time_taken_metric = json.dumps({
                     'event_description': 'Time from action rule trigger to all print files produced',
                     'event_type': 'ACTION_RULE_TO_PRINT',
