@@ -67,10 +67,10 @@ def wait_for_print_files(context, timeout):
             if datetime.utcnow() - timeout_start >= timedelta(hours=int(timeout)):
                 assert False, (f"Timed out waiting for print files after {timeout} hours,"
                                f" actual_line_counts: {context.actual_line_counts}")
-        sleep(int(Config.SFTP_POLLING_DELAY_SECONDS))
-        attempts += 1
-        if not attempts % 300:
-            logger.info('Still waiting for print files')
+            sleep(int(Config.SFTP_POLLING_DELAY_SECONDS))
+            attempts += 1
+            if not attempts % 300:
+                logger.info('Still waiting for print files', current_line_counts=context.actual_line_counts)
 
 
 def fetch_all_print_files_paths(sftp, context):
