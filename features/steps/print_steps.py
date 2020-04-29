@@ -25,12 +25,8 @@ def manifest_files_all_created_with_correct_row_counts(context, time_limit_hours
 
     with SftpUtility() as sftp:
         while True:
-            context.all_initial_manifest_sftp_paths = fetch_all_manifest_files_paths(sftp, context)
             context.produced_print_file_time = datetime.utcnow()
-            manifest_file_sftp_paths = [manifest_file_path for manifest_file_path in
-                                        context.all_initial_manifest_sftp_paths
-                                        if manifest_file_path.name.endswith('.manifest')]
-
+            manifest_file_sftp_paths = fetch_all_manifest_files_paths(sftp, context)
             update_actual_line_counts_from_manifest(manifest_file_sftp_paths, sftp, context)
 
             if context.expected_line_counts == context.actual_line_counts:
