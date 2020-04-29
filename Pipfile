@@ -12,7 +12,6 @@ paramiko = "*"
 requests = "*"
 google-cloud-storage = "*"
 google-cloud-pubsub = "*"
-vulture = "*"
 
 [dev-packages]
 flake8 = "*"
