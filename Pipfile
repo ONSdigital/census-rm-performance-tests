@@ -9,10 +9,10 @@ behave = "*"
 pika = "*"
 census-rm-sample-loader = {editable = true,git = "https://github.com/ONSdigital/census-rm-sample-loader",ref = "v2.1.0"}
 paramiko = "*"
-pgpy = "*"
 requests = "*"
 google-cloud-storage = "*"
 google-cloud-pubsub = "*"
+vulture = "*"
 
 [dev-packages]
 flake8 = "*"

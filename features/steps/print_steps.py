@@ -8,49 +8,31 @@ from behave import step
 from structlog import wrap_logger
 
 from config import Config
-from utilties.decrypt import decrypt_message
 from utilties.mappings import PACK_CODE_TO_ACTION_TYPE
 from utilties.sftp_utility import SftpUtility
 
 logger = wrap_logger(logging.getLogger(__name__))
 
 
-def get_pack_code_from_print_file_name(print_file_name):
-    for pack_code in PACK_CODE_TO_ACTION_TYPE.keys():
-        if print_file_name.startswith(pack_code):
-            return pack_code
-
-
-def update_actual_line_counts(print_file_sftp_paths, sftp, context):
-    for print_file_sftp_path in print_file_sftp_paths:
-        if print_file_sftp_path not in context.counted_print_files:
-            context.counted_print_files.add(print_file_sftp_path)
-            pack_code = get_pack_code_from_print_file_name(print_file_sftp_path.name)
-
-            with sftp.sftp_client.open(str(print_file_sftp_path)) as print_file:
-                decrypted_print_file = decrypt_message(print_file.read(),
-                                                       private_key_file_path=Config.DECRYPTION_KEY_PATH,
-                                                       private_key_passphrase=Config.DECRYPTION_KEY_PASSPHRASE)
-            context.actual_line_counts[PACK_CODE_TO_ACTION_TYPE[pack_code]] += len(decrypted_print_file.splitlines())
-
-
-@step('all the initial contact print files are produced on the SFTP '
-      'containing the correct total number of cases within {timeout} hours')
-@step('all the initial contact print files are produced on the SFTP '
-      'containing the correct total number of cases within {timeout} hour')
-def wait_for_print_files(context, timeout):
+@step("all the manifest files are created with correct row count within {time_limit_hours} hours")
+def manifest_files_all_created_with_correct_row_counts(context, time_limit_hours):
+    timeout = 1
     timeout_start = datetime.utcnow()
     context.actual_line_counts = {action_type: 0 for action_type in context.expected_line_counts.keys()}
-    context.counted_print_files = set()
+    context.counted_manifest_files = set()
     attempts = 0
-    logger.info('Waiting for print files')
+    logger.info('Waiting for manifest files')
+
     with SftpUtility() as sftp:
         while True:
-            context.all_initial_print_sftp_paths = fetch_all_print_files_paths(sftp, context)
+            context.all_initial_manifest_sftp_paths = fetch_all_manifest_files_paths(sftp, context)
             context.produced_print_file_time = datetime.utcnow()
-            print_file_sftp_paths = [print_file_path for print_file_path in context.all_initial_print_sftp_paths
-                                     if print_file_path.name.endswith('.csv.gpg')]
-            update_actual_line_counts(print_file_sftp_paths, sftp, context)
+            manifest_file_sftp_paths = [manifest_file_path for manifest_file_path in
+                                        context.all_initial_manifest_sftp_paths
+                                        if manifest_file_path.name.endswith('.manifest')]
+
+            update_actual_line_counts_from_manifest(manifest_file_sftp_paths, sftp, context)
+
             if context.expected_line_counts == context.actual_line_counts:
                 logger.info('All print files found')
                 context.print_file_production_run_time = (context.produced_print_file_time
@@ -73,17 +55,41 @@ def wait_for_print_files(context, timeout):
                 logger.info('Still waiting for print files', current_line_counts=context.actual_line_counts)
 
 
-def fetch_all_print_files_paths(sftp, context):
-    print_file_paths = [Path(Config.SFTP_QM_DIRECTORY).joinpath(str(file_name.filename)) for file_name in
-                        sftp.get_all_print_files(Config.SFTP_QM_DIRECTORY, context.test_start_local_datetime)]
-    print_file_paths.extend([Path(Config.SFTP_PPO_DIRECTORY).joinpath(str(file_name.filename)) for file_name in
-                             sftp.get_all_print_files(Config.SFTP_PPO_DIRECTORY, context.test_start_local_datetime)])
-    return print_file_paths
-
-
 @step("they are produced within the time limit {time_limit_minutes} minutes")
 def print_file_produced_within_time_limit(context, time_limit_minutes):
     assert context.print_file_production_run_time < timedelta(minutes=int(time_limit_minutes)), (
         f'Print file production exceeded time limit: '
         f'limit = [{timedelta(minutes=time_limit_minutes)}], '
         f'actual = [{context.print_file_production_run_time}]')
+
+
+def fetch_all_manifest_files_paths(sftp, context):
+    manifest_file_paths = [Path(Config.SFTP_QM_DIRECTORY).joinpath(str(file_name.filename)) for file_name in
+                           sftp.get_all_print_files(Config.SFTP_QM_DIRECTORY, context.test_start_local_datetime,
+                                                    suffix='.manifest')]
+
+    manifest_file_paths.extend([Path(Config.SFTP_PPO_DIRECTORY).joinpath(str(file_name.filename)) for file_name in
+                                sftp.get_all_print_files(Config.SFTP_PPO_DIRECTORY, context.test_start_local_datetime,
+                                                         suffix='.manifest')])
+    return manifest_file_paths
+
+
+def get_pack_code_from_print_file_name(print_file_name):
+    for pack_code in PACK_CODE_TO_ACTION_TYPE.keys():
+        if print_file_name.startswith(pack_code):
+            return pack_code
+
+
+def update_actual_line_counts_from_manifest(manifest_file_sftp_paths, sftp, context):
+    for manifest_file_sftp_path in manifest_file_sftp_paths:
+        if manifest_file_sftp_path not in context.counted_manifest_files:
+            context.counted_manifest_files.add(manifest_file_sftp_path)
+            manifest_data = _get_actual_manifest(sftp, str(manifest_file_sftp_path))
+            pack_code = get_pack_code_from_print_file_name(manifest_file_sftp_path.name)
+
+            context.actual_line_counts[PACK_CODE_TO_ACTION_TYPE[pack_code]] += manifest_data['files'][0]['rows']
+
+
+def _get_actual_manifest(sftp_utility, manifest_file_path):
+    actual_manifest_json = sftp_utility.get_file_contents_as_string(manifest_file_path)
+    return json.loads(actual_manifest_json)
