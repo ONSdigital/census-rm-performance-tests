@@ -37,7 +37,7 @@ class Config:
     SFTP_POLLING_DELAY_SECONDS = os.getenv('SFTP_POLLING_DELAY_SECONDS', 1)
 
     SAMPLE_FILE_PATH = Path(os.getenv('SAMPLE_FILE_PATH', PROJECT_PATH.joinpath('resources', 'sample_files',
-                                                                                '1_per_treatment_code.csv')))
+                                                                                '100_per_treatment_code.csv')))
 
     SAMPLE_BUCKET = os.getenv('SAMPLE_BUCKET', 'census-rm-performance-sample-files')
 
