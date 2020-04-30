@@ -20,11 +20,7 @@ class Config:
     RABBITMQ_VHOST = os.getenv('RABBITMQ_VHOST', '/')
     RABBITMQ_SAMPLE_INBOUND_QUEUE = os.getenv('RABBITMQ_QUEUE', 'case.sample.inbound')
     RABBITMQ_SAMPLE_TO_ACTION_QUEUE = 'case.action'
-    RABBITMQ_RH_OUTBOUND_CASE_QUEUE = os.getenv('RABBITMQ_RH_OUTBOUND_CASE_QUEUE', 'case.rh.case')
     RABBITMQ_RH_OUTBOUND_UAC_QUEUE = os.getenv('RABBITMQ_RH_OUTBOUND_UAC_QUEUE', 'case.rh.uac')
-    RABBITMQ_UNADDRESSED_REQUEST_QUEUE = os.getenv('RABBITMQ_UNADDRESSED_REQUEST_QUEUE', 'unaddressedRequestQueue')
-    RABBITMQ_OUTBOUND_FIELD_QUEUE = os.getenv('RABBITMQ_OUTBOUND_FIELD_QUEUE', 'Action.Field')
-    RABBITMQ_INBOUND_EQ_QUEUE = os.getenv('RABBITMQ_INBOUND_EQ_QUEUE', 'Case.Responses')
     RABBITMQ_DELAYED_REDELIVERY_QUEUE = 'delayedRedeliveryQueue'
     RABBITMQ_EXCHANGE = os.getenv('RABBITMQ_EXCHANGE', '')
     RABBITMQ_USER = os.getenv('RABBITMQ_USER', 'guest')
@@ -40,17 +36,10 @@ class Config:
     SFTP_QM_DIRECTORY = os.getenv('SFTP_QM_DIRECTORY', 'qmprint_dev/print_services/')
     SFTP_POLLING_DELAY_SECONDS = os.getenv('SFTP_POLLING_DELAY_SECONDS', 1)
 
-    DECRYPTION_KEY_PATH = Path(os.getenv('DECRYPTION_KEY_PATH',
-                                         PROJECT_PATH.joinpath('resources', 'dummy_keys', 'our_dummy_private.asc')))
-    DECRYPTION_KEY_PASSPHRASE = os.getenv('DECRYPTION_KEY_PATH', 'test')
-
     SAMPLE_FILE_PATH = Path(os.getenv('SAMPLE_FILE_PATH', PROJECT_PATH.joinpath('resources', 'sample_files',
                                                                                 '100_per_treatment_code.csv')))
 
     SAMPLE_BUCKET = os.getenv('SAMPLE_BUCKET', 'census-rm-performance-sample-files')
-
-    CASE_RECEIPT_SAMPLE_FILE = Path(os.getenv('SAMPLE_FILE_PATH', PROJECT_PATH.joinpath('resources', 'sample_files',
-                                                                                        '10000_sample_file.csv')))
 
     PUBSUB_MESSAGE_QUANTITY = 5000
     CASE_RECEIPT_QUEUE_NAME = "Case.Responses"

@@ -7,7 +7,6 @@ from datetime import datetime
 import requests
 
 from config import Config
-from utilties.rabbit_context import RabbitContext
 
 
 def before_all(_):
@@ -73,10 +72,3 @@ def _clear_down_queue(queue_name):
             return
 
         time.sleep(1)
-
-
-def add_test_queue(binding_key, exchange_name, queue_name, exchange_type='topic'):
-    with RabbitContext() as rabbit:
-        rabbit.channel.exchange_declare(exchange=exchange_name, exchange_type=exchange_type, durable=True)
-        rabbit.channel.queue_declare(queue=queue_name, durable=True)
-        rabbit.channel.queue_bind(exchange=exchange_name, queue=queue_name, routing_key=binding_key)
