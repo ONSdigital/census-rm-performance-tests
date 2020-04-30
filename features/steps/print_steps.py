@@ -14,9 +14,8 @@ from utilties.sftp_utility import SftpUtility
 logger = wrap_logger(logging.getLogger(__name__))
 
 
-@step("all the manifest files are created with correct row count within {time_limit_hours} hours")
-def manifest_files_all_created_with_correct_row_counts(context, time_limit_hours):
-    timeout = 1
+@step("all the manifest files are created with correct row count within {timeout} hours")
+def manifest_files_all_created_with_correct_row_counts(context, timeout):
     timeout_start = datetime.utcnow()
     context.actual_line_counts = {action_type: 0 for action_type in context.expected_line_counts.keys()}
     context.counted_manifest_files = set()
