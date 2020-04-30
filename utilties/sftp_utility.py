@@ -38,4 +38,3 @@ class SftpUtility:
     def get_file_contents_as_string(self, file_path):
         with self.sftp_client.open(file_path) as sftp_file:
             return sftp_file.read().decode('utf-8')
-

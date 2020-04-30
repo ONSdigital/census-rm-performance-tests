@@ -7,7 +7,6 @@ from datetime import datetime
 import requests
 
 from config import Config
-from utilties.rabbit_context import RabbitContext
 
 
 def before_all(_):
