@@ -8,8 +8,7 @@ lint:
 	pipenv run flake8
 
 check:
-	# TODO reinstate this once https://github.com/pypa/pipenv/issues/4188 is resolved
-	#pipenv check
+	PIPENV_PYUP_API_KEY="" pipenv check
 
 test: lint check performance-test
 
