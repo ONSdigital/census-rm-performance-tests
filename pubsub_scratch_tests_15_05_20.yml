@@ -1,0 +1,16 @@
+100,000 messages:
+  replicas:
+    1:
+      - {"event_description": "Time for pubsub service to process 100000 Google Pubsub messages", "event_type": "PUBSUB_PERFORMANCE", "time_in_seconds": "120.678279", "time_taken": "0:02:00.678279", "scenario_tag": "pubsub"}
+      - {"event_description": "Time for pubsub service to process 100000 Google Pubsub messages", "event_type": "PUBSUB_PERFORMANCE", "time_in_seconds": "110.061335", "time_taken": "0:01:50.061335", "scenario_tag": "pubsub"}
+    2:
+      - {"event_description": "Time for pubsub service to process 100000 Google Pubsub messages", "event_type": "PUBSUB_PERFORMANCE", "time_in_seconds": "84.880629", "time_taken": "0:01:24.880629", "scenario_tag": "pubsub"}
+
+500,000 messages:
+  replicas:
+    1:
+      - {"event_description": "Time for pubsub service to process 500000 Google Pubsub messages", "event_type": "PUBSUB_PERFORMANCE", "time_in_seconds": "180.171496", "time_taken": "0:03:00.171496", "scenario_tag": "pubsub"}
+    2:
+      - {"event_description": "Time for pubsub service to process 500000 Google Pubsub messages", "event_type": "PUBSUB_PERFORMANCE", "time_in_seconds": "180.792896", "time_taken": "0:03:00.792896", "scenario_tag": "pubsub"}
+    5:
+      - {"event_description": "Time for pubsub service to process 500000 Google Pubsub messages", "event_type": "PUBSUB_PERFORMANCE", "time_in_seconds": "180.257388", "time_taken": "0:03:00.257388", "scenario_tag": "pubsub"}

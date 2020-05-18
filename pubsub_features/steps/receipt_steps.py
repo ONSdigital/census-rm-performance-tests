@@ -25,9 +25,14 @@ def receipt_performance_test(context):
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path(Config.PUBSUB_PROJECT, Config.PUBSUB_TOPIC)
 
-    test_start_time = datetime.utcnow()
     for _ in range(0, int(test_quantity)):
         publish_message(publisher, json_message, topic_path)
+
+    print('PubSub messages published, waiting for first rabbit message')
+
+    wait_for_first_message_appear(Config.CASE_RECEIPT_QUEUE_NAME)
+    test_start_time = datetime.utcnow()
+    print(f'First rabbit message seen, starting the clock at {test_start_time}')
 
     wait_for_queue_to_reach_target(Config.CASE_RECEIPT_QUEUE_NAME, test_quantity)
 
@@ -53,7 +58,18 @@ def publish_message(publisher, json_message, topic_path):
 
 def wait_for_queue_to_reach_target(queue_name, target):
     loop_start_time = datetime.utcnow()
-    while get_message_count(queue_name) < target:
+    message_count = get_message_count(queue_name)
+    while message_count < target:
+        print(f'Queue "{queue_name}" message count: {message_count}, waiting for {target}')
         time.sleep(1)
-        if (datetime.utcnow() - loop_start_time).total_seconds() > 3600:
+        if (datetime.utcnow() - loop_start_time).total_seconds() > 100000:
+            assert "Pubsub messages not published within time limit"
+        message_count = get_message_count(queue_name)
+
+
+def wait_for_first_message_appear(queue_name):
+    loop_start_time = datetime.utcnow()
+    while get_message_count(queue_name) < 1:
+        time.sleep(0.1)
+        if (datetime.utcnow() - loop_start_time).total_seconds() > 600:
             assert "Pubsub messages not published within time limit"
