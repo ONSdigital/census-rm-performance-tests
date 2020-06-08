@@ -45,3 +45,6 @@ class Config:
     CASE_RECEIPT_QUEUE_NAME = "Case.Responses"
     PUBSUB_PROJECT = os.getenv('PUBSUB_PROJECT', "census-rm-performance")
     PUBSUB_TOPIC = os.getenv('PUBSUB_TOPIC', "receipting-topic-performance")
+
+    GOOGLE_APPLICATION_CREDENTIALS = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
+    GOOGLE_SERVICE_ACCOUNT_JSON = os.getenv('GOOGLE_SERVICE_ACCOUNT_JSON')
