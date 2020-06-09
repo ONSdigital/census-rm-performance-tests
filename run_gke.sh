@@ -41,7 +41,7 @@ echo "Running Census RM Performance Tests [`kubectl config current-context`]..."
 
 
 kubectl run performance-tests -it --command --rm --quiet --generator=run-pod/v1 \
-    --image=$IMAGE --restart=Never --serviceaccount=performance-tests \
+    --image=$IMAGE --restart=Never \
     $(while read env; do echo --env=${env}; done < kubernetes.env) \
     --env=SFTP_HOST=$(kubectl get secret sftp-ssh-credentials -o=jsonpath="{.data.host}" | base64 --decode) \
     --env=SFTP_USERNAME=$(kubectl get secret sftp-ssh-credentials -o=jsonpath="{.data.username}" | base64 --decode) \
