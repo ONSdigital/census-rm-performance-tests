@@ -44,6 +44,9 @@ def get_expected_line_counts(sample_file_path, classifiers_for_action_type):
 def setup_action_rules(context, action_plan_url):
     context.action_rule_trigger_time = datetime.utcnow()
     trigger_date_time = context.action_rule_trigger_time.isoformat() + 'Z'
+
+    # NOTE: This is left as json as it's used to get expected counts
+    # The SQL is built from this
     classifiers_for_action_type = {
         'ICL1E': {'treatment_code': ['HH_LF2R1E', 'HH_LF2R2E', 'HH_LF2R3AE', 'HH_LF2R3BE', 'HH_LF3R1E', 'HH_LF3R2E',
                                      'HH_LF3R3AE', 'HH_LF3R3BE', 'HH_LFNR1E', 'HH_LFNR2E', 'HH_LFNR3AE', 'HH_LFNR3BE']},
@@ -56,7 +59,19 @@ def setup_action_rules(context, action_plan_url):
                                       'HH_QFNR1W', 'HH_QFNR2W', 'HH_QFNR3AW']},
         'ICHHQN': {'treatment_code': ['HH_3QSFN']}
     }
+
     context.expected_line_counts = get_expected_line_counts(context.sample_file, classifiers_for_action_type)
     for action_type, classifiers in classifiers_for_action_type.items():
-        create_action_rule(str(uuid.uuid4()), trigger_date_time, classifiers,
+        sql_clause_from_json = get_sql_clause_from_json(classifiers)
+        create_action_rule(str(uuid.uuid4()), trigger_date_time, sql_clause_from_json,
                            action_plan_url, action_type)
+
+
+def get_sql_clause_from_json(classifiers_for_action_type):
+    sql = ''
+
+    for action_type, classifiers in classifiers_for_action_type.items():
+        values_to_filter = "','".join(classifiers)
+        sql = f"{sql} AND {action_type} IN ('{values_to_filter}')"
+
+    return sql
