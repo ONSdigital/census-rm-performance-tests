@@ -68,10 +68,11 @@ def setup_action_rules(context, action_plan_url):
 
 
 def get_sql_clause_from_json(classifiers_for_action_type):
-    sql = ''
+    sqls = []
 
     for action_type, classifiers in classifiers_for_action_type.items():
         values_to_filter = "','".join(classifiers)
-        sql = f"{sql} AND {action_type} IN ('{values_to_filter}')"
+        sqls.append(f" {action_type} IN ('{values_to_filter}')")
 
+    sql = ' AND '.join(sqls)
     return sql
