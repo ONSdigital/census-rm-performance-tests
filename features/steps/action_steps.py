@@ -45,8 +45,7 @@ def setup_action_rules(context, action_plan_url):
     context.action_rule_trigger_time = datetime.utcnow()
     trigger_date_time = context.action_rule_trigger_time.isoformat() + 'Z'
 
-    # NOTE: This is left as json as it's used to get expected counts
-    # The SQL is built from this
+    # The expected counts and the SQL are built from this
     classifiers_for_action_type = {
         'ICL1E': {'treatment_code': ['HH_LF2R1E', 'HH_LF2R2E', 'HH_LF2R3AE', 'HH_LF2R3BE', 'HH_LF3R1E', 'HH_LF3R2E',
                                      'HH_LF3R3AE', 'HH_LF3R3BE', 'HH_LFNR1E', 'HH_LFNR2E', 'HH_LFNR3AE', 'HH_LFNR3BE']},
