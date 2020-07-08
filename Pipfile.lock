@@ -156,11 +156,11 @@
         },
         "google-cloud-pubsub": {
             "hashes": [
-                "sha256:227829aa0b6534d6cf34b96c7d6cf5d3e9dbaf569253439e78caee857d83d0ca",
-                "sha256:536da438998201620285489c8499a76e5c27d760f4d0a42486cd7138268ca60d"
+                "sha256:a08ade0ca8384e9adc6379200202b0769434a69453011da16590f90db4c1a32f",
+                "sha256:a693de6598f1d8ad636a3260a4c28ec5410fdef2899a371eba75761860d2339b"
             ],
             "index": "pypi",
-            "version": "==1.6.0"
+            "version": "==1.6.1"
         },
         "google-cloud-storage": {
             "hashes": [
