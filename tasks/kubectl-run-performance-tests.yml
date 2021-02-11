@@ -10,7 +10,6 @@ params:
   GCP_PROJECT_NAME:
   KUBERNETES_CLUSTER:
   PERFORMANCE_TESTS_IMAGE:
-  CASE_PROCESSOR_REPLICAS:
 
 inputs:
 - name: performance-tests-repo
@@ -54,9 +53,6 @@ run:
         --env=RABBITMQ_PASSWORD=$(kubectl get secret rabbitmq -o=jsonpath="{.data.rabbitmq-password}" | base64 --decode) \
         --env=RABBITMQ_MAN_PORT=15672 \
         -- /bin/bash -c "sleep 2; behave pubsub_features --tags=${TEST_SCENARIO} --no-capture"
-
-        kubectl scale deployment case-processor --replicas=$CASE_PROCESSOR_REPLICAS
-        kubectl rollout status deploy case-processor --watch=true --timeout=200s
       fi
 
       # Create an performance tests pod and run the performance tests in it
