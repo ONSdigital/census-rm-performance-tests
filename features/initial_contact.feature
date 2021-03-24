@@ -21,5 +21,5 @@ Feature: RM produces all initial contact print files within a time window
     Given the sample file "30_million_household_sample.csv" has been loaded from the bucket
     And the sample has been fully ingested into action scheduler database
     When all initial contact action rules are scheduled for now
-    Then all the manifest files are created with correct row count within 12 hours
-    And they are produced within the time limit 720 minutes
+    Then all the manifest files are created with correct row count within 20 hours
+    And they are produced within the time limit 1000 minutes
